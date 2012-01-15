@@ -6,7 +6,9 @@ gem 'rails', '3.1.1'
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
-
+gem "rake", "0.8.7"
+gem 'devise'
+gem 'paperclip' , :path => "vendor/gems/paperclip"
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -30,7 +32,15 @@ gem 'jquery-rails'
 # To use debugger
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
+gem "rspec-rails", :group => [:test, :development]
+gem 'ruby-debug19', :require => 'ruby-debug', :group => [:development, :test]
 group :test do
   # Pretty printed test output
   gem 'turn', :require => false
+  gem 'factory_girl_rails'
+  gem "capybara"
+  gem "guard-rspec"  
+  gem "spork", "> 0.9.0.rc"
+  # gem "guard-spork"
+  gem "win32console"
 end
