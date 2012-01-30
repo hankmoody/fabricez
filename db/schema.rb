@@ -57,16 +57,16 @@ ActiveRecord::Schema.define(:version => 20120116003049) do
   create_table "fabrics", :force => true do |t|
     t.string   "code"
     t.integer  "width"
-    t.decimal  "price"
-    t.decimal  "quantity"
+    t.decimal  "price",                   :precision => 9, :scale => 2
+    t.decimal  "quantity",                :precision => 9, :scale => 2
     t.string   "attachment_file_name"
     t.string   "attachment_content_type"
     t.integer  "attachment_file_size"
     t.datetime "attachment_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "published",               :default => false
-    t.boolean  "processed",               :default => false
+    t.boolean  "published",                                             :default => false
+    t.boolean  "processed",                                             :default => false
   end
 
   create_table "fabrics_tags", :id => false, :force => true do |t|
