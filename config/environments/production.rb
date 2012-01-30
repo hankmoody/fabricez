@@ -60,4 +60,9 @@ Fabricez::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+  
+  # Paperclip Amazon S3 settings
+  config.s3_attachment_bucket = 'cnsfabricsus'
+  config.s3_host_alias = 'http://cnsfabricsus.s3-website-us-east-1.amazonaws.com/'
+
 end

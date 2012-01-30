@@ -2,13 +2,16 @@ class ReedPick < ActiveRecord::Base
   belongs_to :fabric
   
   # Validations
-  validates_presence_of :reed
-  validates_presence_of :pick
+  # validates_presence_of :reed
+  # validates_presence_of :pick
+  
+  validates_format_of :full_reed_pick, :with => /^\s*(\d+)\s*\/\s*(\d+)\s*$/, :allow_blank => true,
+                      :message => "Invalid! Eg: 20/30"
   
   # Virtual Attributes
   def full_reed_pick
     # Convention says Reed / Pick
-    "#{reed}/#{pick}"
+    "#{reed}/#{pick}" unless (reed.nil? || pick.nil?)
   end
   
   def full_reed_pick=(reedpick)
@@ -19,12 +22,6 @@ class ReedPick < ActiveRecord::Base
     else
       return nil
     end
-    
-    # reed_pick_array = reedpick.split('/').collect {|s| s.strip}
-    # yarn_count_array = full_yarn_count.split("x").collect { |s| s.strip }
-    # self.warp_count = yarn_count_array[0]
-    # self.weft_count = yarn_count_array[1]
-    
   end
 
   # Accessibility

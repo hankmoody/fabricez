@@ -1,0 +1,38 @@
+<!-- Locals: 
+		- block_type 
+		- tag_type
+-->
+    <% if block_type == 'ColorBlock' %>
+	
+		<% fabric_colors = @fabric.colors%>
+		<% ul_width = 25 * @fabric.colors.count %>
+		<ul class="fabric_color_palette" style="width:<%= ul_width %>px;">
+			<% fabric_colors.each do |fc| %>
+				<li class="fabric_color_block"><%=link_to "", "#", :style => "background-color:#{fc.hexvalue}"%></li>
+			<% end %>
+		</ul>
+	<% end %>
+	
+
+    <% if block_type == 'show_tag_lis' %>
+		<%
+			# This block will render <li>s for specified tag type.
+		%>	
+		<% Tag.get_names(tag_type).each do |t| %>
+			<li><%= link_to t, "#"%></li>
+		<% end %>
+	<% end %>
+	
+    <% if block_type == 'show_tags' %>
+    	<span class="fabric_label_container"><span class="fabric_label">By <%= tag_type.titleize %></span></span>	
+    	<ul class="fabric_show_tags front_page_tags">
+    		<%= render :partial => 'layouts/blocks', :locals => { :block_type=> 'show_tag_lis', :tag_type => tag_type } %>
+		</ul>
+	<% end %>
+	
+    <% if block_type == 'tags' %>
+    	<span class="fabric_label_container"><span class="fabric_label">By <%= tag_type.titleize %></span></span>
+    	<ul class="fabric_tags">
+    		<%= render :partial => 'layouts/blocks', :locals => { :block_type=> 'show_tag_lis', :tag_type => tag_type } %>
+		</ul>
+	<% end %>	

@@ -2,7 +2,7 @@ class Collection < ActiveRecord::Base
   has_and_belongs_to_many :fabrics
   belongs_to :user
   
-  attr_accessible :name
+  attr_accessible :name, :user, :fabrics
   validates_presence_of :name
   
   def destroy_all_fabrics

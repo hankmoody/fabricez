@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120115200947) do
+ActiveRecord::Schema.define(:version => 20120116003049) do
 
   create_table "collections", :force => true do |t|
     t.string   "name"
@@ -69,6 +69,11 @@ ActiveRecord::Schema.define(:version => 20120115200947) do
     t.boolean  "processed",               :default => false
   end
 
+  create_table "fabrics_tags", :id => false, :force => true do |t|
+    t.integer "tag_id"
+    t.integer "fabric_id"
+  end
+
   create_table "reed_picks", :force => true do |t|
     t.integer  "reed"
     t.integer  "pick"
@@ -80,6 +85,13 @@ ActiveRecord::Schema.define(:version => 20120115200947) do
   create_table "roles", :force => true do |t|
     t.string   "category"
     t.integer  "limit"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "tags", :force => true do |t|
+    t.string   "name"
+    t.string   "tagtype"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

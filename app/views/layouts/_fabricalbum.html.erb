@@ -1,0 +1,48 @@
+<% if !@fabrics.empty? %>
+<% fabric_count = 1 %>
+<div id="fabric_folder">
+	<div id="fabric_selection_page" class="fabric_selection">
+		<ul id="fabric_selection_page_ul" class="design_area">
+			<% @fabrics.each do |fabric| %>
+				<% (fabric_count%3 == 0) ? class_value = "last" : class_value = ""  %>
+					<li id="design1" class='<%= class_value %>'>
+					<div class="card_shadow">
+						<div class="design_card">
+							<div class="image_holder">
+								<%= link_to image_tag(fabric.attachment.url(:thumb)), fabric_path(fabric.id) %>
+								<ul class="design_info">
+									<li><%= fabric.code %></li>
+									<% if (fabric.quantity && fabric.quantity > 0) %>
+										<li class="design_quantity"><%= format_qty fabric.quantity %> mts</li>
+									<% end %>
+									<% if (current_user && (current_user.owns_fabric?(fabric) || current_user.role.category == "admin")) %>
+										<li class="design_card_icon design_del_link design_left_link"><%= link_to "", 
+																									fabric_path(fabric.id, :redirect_to => user_path(:display => params[:display])), 
+																									:confirm => "Are you sure?", 
+																									:method => :delete,
+																									:title => "Delete"  %></li>
+										<li class="design_card_icon design_edit_link"><%= link_to "",
+																			 edit_fabric_path(fabric.id),
+																			 :title => "Edit" %> </li>
+									<% end %>
+								 	<% if current_user && current_user.role.category == "admin" %>
+										<li class="design_card_icon design_check_link"><%= link_to "",
+																			 publish_fabric_path(:id => fabric.id),
+																			 :title => "Publish" %> </li>
+								 	<% end %>									
+								</ul>
+							</div>
+						</div>
+					</div>
+				</li>
+				<% fabric_count += 1 %>
+			<% end %>			
+		</ul>
+	</div>
+</div>
+<!-- For some reason remote = true (AJAX) is not working. Set it to false for now.
+	 TODO: Fix AJAX in pagination -->
+<%= paginate @fabrics, :remote => false %>
+<% else %>
+	No fabrics found.
+<% end %>

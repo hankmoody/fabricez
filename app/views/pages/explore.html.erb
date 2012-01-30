@@ -1,0 +1,80 @@
+
+<div class="span-18">
+<%= render 'layouts/fabricalbum'%>
+
+</div>
+
+<div class="span-6 last">	
+	<div class="tag-filter-container">
+		<span class="fabric_label_container"><span class="fabric_label">Filter</span></span>
+		<fieldset>
+		<legend class="">Select Tags:</legend>
+		<%= render :partial => 'layouts/filterblock', :locals => { :filter_type=> 'TagSelect', :tag_type => 'pattern' } %>
+		<%= render :partial => 'layouts/filterblock', :locals => { :filter_type=> 'TagSelect', :tag_type => 'weave' } %>
+		<%= render :partial => 'layouts/filterblock', :locals => { :filter_type=> 'TagSelect', :tag_type => 'season' } %>
+		<%= render :partial => 'layouts/filterblock', :locals => { :filter_type=> 'TagSelect', :tag_type => 'contents' } %>
+		<%= render :partial => 'layouts/filterblock', :locals => { :filter_type=> 'TagSelect', :tag_type => 'other' } %>
+		<%= render :partial => 'layouts/filterblock', :locals => { :filter_type=> 'TagSelect', :tag_type => 'best_for' } %>
+		</fieldset>
+	</div>
+</div>
+
+<script>
+	
+	// *** Source: http://james.padolsey.com/javascript/parsing-urls-with-the-dom/
+	// This function creates a new anchor element and uses location
+	// properties (inherent) to get the desired URL data. Some String
+	// operations are used (to normalize results across browsers).
+	function parseURL(url) {
+	    var a =  document.createElement('a');
+	    a.href = url;
+	    return {
+	        source: url,
+	        protocol: a.protocol.replace(':',''),
+	        host: a.hostname,
+	        port: a.port,
+	        query: a.search,
+	        params: (function(){
+	            var ret = {},
+	                seg = a.search.replace(/^\?/,'').split('&'),
+	                len = seg.length, i = 0, s;
+	            for (;i<len;i++) {
+	                if (!seg[i]) { continue; }
+	                s = seg[i].split('=');
+	                ret[s[0]] = s[1];
+	            }
+	            return ret;
+	        })(),
+	        file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
+	        hash: a.hash.replace('#',''),
+	        path: a.pathname.replace(/^([^\/])/,'/$1'),
+	        relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
+	        segments: a.pathname.replace(/^\//,'').split('/')
+	    };
+	}
+		
+	function construct_new_url() {
+		var url_param = {};		
+		$(".chosen_tags").chosen().find("option:selected").each(function(index, value) {
+			var tag_type = $(this).parent().attr('data-tag-type');
+			if (url_param[tag_type] == undefined) {
+				url_param[tag_type] = new Array();	
+			}
+			url_param[tag_type].push($(this).text());
+		});
+		
+		// Convert to JSON Style
+		url_param_json = JSON.parse(JSON.stringify(url_param));
+		return parseURL(document.URL).path+'?'+$.param(url_param_json);		
+	}	
+	
+	
+	$(function () {
+		$(".filter_chosen").chosen();
+		
+		$(".filter_chosen").chosen().change(function() {
+			window.location = construct_new_url();
+		});
+		
+	});
+</script>

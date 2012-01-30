@@ -1,0 +1,12 @@
+<!-- Locals: 
+		- hideUploadLink 
+-->
+	<div class="upload_block">
+		<% fabric_count = current_user.fabrics.count %>
+		<% fabric_limit = current_user.role.limit %>
+		You are using <b><%= "#{fabric_count} / #{fabric_limit}" %> </b> entries.
+		<br>
+		<% if !hideUploadLink %>
+			<%= link_to "Upload Fabrics", upload_path %>
+		<% end %>
+	</div>

@@ -2,6 +2,13 @@ require 'spec_helper'
 
 describe Fabric do
   
+  before (:all) do
+  end
+  
+  after (:all) do
+    Tag.all.each { |t| t.delete }
+  end
+  
   before (:each) do
     @std_fabric = Factory.create(:fabric)
   end
@@ -36,6 +43,36 @@ describe Fabric do
     ReedPick.count.should == 0
     Color.count.should == 0
     
+  end
+  
+  it "should handle tags" do
+    @t1 = Factory.create(:tag)
+    @t2 = Factory.create(:tag, :name => "100% Cotton", :tagtype => "contents")
+    load 'fabric.rb' # Reloading since the methods can change
+    f = @std_fabric
+    f.tags.push(@t1)
+    f.tags.push(@t2)
+    f.save
+    f.pattern_list.should == "Check"
+    f.contents_list.should == "100% Cotton"
+    
+    f.pattern_list = ""
+    f.save
+    f.pattern_list.should be_nil
+    Tag.where(tagtype: "pattern").count.should == 1
+    
+    f.contents_list = ""
+    f.save
+    f.contents_list.should be_nil
+    Tag.where(tagtype: "contents").count.should == 0
+    
+    f.contents_list = "100% Cotton"
+    f.save
+    f.contents_list.should == "100% Cotton"
+    
+    f.pattern_list = "Check"
+    f.save
+    f.pattern_list.should == "Check"
   end
   
 end

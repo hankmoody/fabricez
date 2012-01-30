@@ -1,0 +1,9 @@
+
+<div id="top_bar_nav">
+    <ul class="tabs">
+    	<% @navlinks.each do |linkname, link| %>
+        	<li><%= link_to linkname, user_path(:display => link) %></li>
+        <% end %>
+        <%= paginate @fabrics, :remote => false %>
+    </ul>
+</div>

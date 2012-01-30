@@ -1,0 +1,41 @@
+<%
+=begin 
+	
+	Locals: 
+		- block_type 
+		- tag_type
+=end
+%>		
+
+    <% if block_type == 'show_tag_lis' %>
+		<%
+			# This block will render <li>s for specified tag type.
+		%>	
+		<% @fabric.tag_names(tag_type).each do |t| %>
+			<li><%= link_to t, "#"%></li>
+		<% end %>
+	<% end %>
+	
+    <% if block_type == 'show_tags' %>
+    	<ul class="fabric_show_tags">
+    		<%= render :partial => 'fabrics/helper', :locals => { :block_type=> 'show_tag_lis', :tag_type => tag_type } %>
+		</ul>
+	<% end %>
+	
+    <% if block_type == 'tags' %>
+    	<ul class="fabric_tags">
+    		<%= render :partial => 'fabrics/helper', :locals => { :block_type=> 'show_tag_lis', :tag_type => tag_type } %>
+		</ul>
+	<% end %>	
+	
+    <% if block_type == 'show_tags_row' %>
+    	<% if !@fabric.tag_names(tag_type).empty? %>
+		<tr>
+			<td width="50"><span class="color_label"><%= tag_type.titleize %></span></td>
+			<td><span class="color_label">:</span></td>
+			<td>
+				<%= render :partial => 'fabrics/helper', :locals => { :block_type=> 'show_tags', :tag_type => tag_type } %>
+			</td>
+		</tr>
+		<% end %>		
+	<% end %>

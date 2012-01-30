@@ -29,4 +29,8 @@ Fabricez::Application.configure do
   config.assets.debug = true
   
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  
+  config.s3_attachment_bucket = 'cnsfabricstest'
+  config.s3_host_alias = 'http://cnsfabricstest.s3-website-us-east-1.amazonaws.com/'
+  
 end

@@ -6,6 +6,11 @@ Factory.define :role, :class => :role do |r|
 end
 
 
+Factory.define :tag do |t|
+  t.name "Check"
+  t.tagtype "pattern"
+end
+
 Factory.define :yarn_count do |yc|
     yc.warp_ply_count 2
     yc.weft_ply_count 2

@@ -2,4 +2,7 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  errors:
+    messages:
+      count: "Invalid. Eg 2/20s x 2/40s"
+      reedpick: "Invalid. Eg 20/30"

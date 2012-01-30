@@ -1,7 +1,14 @@
 Fabricez::Application.routes.draw do
   devise_for :users
+  resources :fabrics
 
-  root :to => "home#index"
+  root :to => 'pages#home'
+  match '/home', :to => 'pages#home'
+  match '/explore', :to => 'pages#explore'
+  match '/user', :to => 'users#show' # Adding show action to User
+  match '/upload', :to => 'fabrics#upload'
+  match '/get-upload-info', :to => 'users#upload'
+  
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

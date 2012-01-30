@@ -2,13 +2,15 @@ class YarnCount < ActiveRecord::Base
   belongs_to :fabric
   
   # Validations
-  validates_presence_of :warp_yarn_thickness
-  validates_presence_of :weft_yarn_thickness
+  # validates_presence_of :warp_yarn_thickness
+  # validates_presence_of :weft_yarn_thickness
+  validates_count :full_count
+  
   
   # Virtual Attributes
   def full_count
     # Convention says Warp x Weft
-    "#{warp_count} x #{weft_count}"
+    "#{warp_count} x #{weft_count}" unless (warp_yarn_thickness.nil? || weft_yarn_thickness.nil?)
   end
   
   def full_count=(full_yarn_count)

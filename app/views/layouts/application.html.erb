@@ -1,15 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Fabricez</title>
-  <%= stylesheet_link_tag    "application" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
+  <title><%= @title %></title>
+  <%= javascript_include_tag 'jquery-1.6.2.min.js', 
+  							 'jquery-ui-1.8.16.custom.min.js',  
+							 'colorpicker',
+  						     'eye',
+  						     'chosen.jquery',
+  						     'jquery.url',  							 
+  							 'rails.js' , 
+  							 'rails.validations.js',
+  							 'rails.validations.custom.js' %>  
+
+  
+  <%= csrf_meta_tags %>  
+  <%= render 'layouts/stylesheets' %>  
 </head>
 <body>
 
-<%= yield %>
-	<p class="notice"><%= notice %></p>
-	<p class="alert"><%= alert %></p>
+	<%= render 'layouts/header' %>
+	<div class="backfade">
+		<div class="container">
+	  <%- flash.each do |name, msg| -%>
+	    <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
+	  <%- end -%>	
+			<div class="section">
+				<%= yield %>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

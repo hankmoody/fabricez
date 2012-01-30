@@ -5,15 +5,20 @@ gem 'rails', '3.1.1'
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
+gem 'pg'
 gem "rake", "0.8.7"
 gem 'devise'
 gem 'paperclip' , :path => "vendor/gems/paperclip"
+gem 'kaminari'
+gem 'aws-sdk'
+gem "simple_form"
+gem 'client_side_validations'
+
 
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-  gem 'sass-rails',   '~> 3.1.4'
+#  gem 'sass-rails',   '~> 3.1.4'
   gem 'coffee-rails', '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
 end

@@ -1,0 +1,82 @@
+<div class="span-18">
+	<div class="span-10 colborder">
+	
+		<%= image_tag @fabric.attachment.url(:original), :width => 390 %>
+		
+		<% if (current_user && (current_user.owns_fabric?(@fabric) || current_user.role.category == "admin")) %>
+			<ul id="fabric_show_links">
+				<li><%= link_to "Edit", edit_fabric_path(@fabric.id) %></li>
+				<li>|</li>
+				<li><%= link_to "Delete", 
+								fabric_path(@fabric.id, :redirect_to => user_path(:display => params[:display])), 
+								:confirm => "Are you sure?", 
+								:method => :delete  %></li>
+			</ul>
+		<% end %>
+	
+	</div>
+	<div class="span-7 last">
+		
+		<span class="large quiet">Checks N Stripes</span>
+		
+		<% fabric_code = (@fabric.code.nil?) ? 'Unprocessed' : @fabric.code  %>
+		<h3><%= fabric_code %></h3>
+		
+		<span class="fabric_label">Colors</span>
+		<%= render :partial => 'layouts/blocks', :locals => { :block_type => 'ColorBlock' } %>
+				
+		<% if !@fabric.tags.empty? %>
+			<span class="fabric_label">Tags</span>
+			<table id="tag_table">
+				<tbody>
+					<%= render :partial => 'helper', :locals => { :block_type=> 'show_tags_row', :tag_type => 'pattern' } %>
+					<%= render :partial => 'helper', :locals => { :block_type=> 'show_tags_row', :tag_type => 'weave' } %>
+					<%= render :partial => 'helper', :locals => { :block_type=> 'show_tags_row', :tag_type => 'season' } %>
+					<%= render :partial => 'helper', :locals => { :block_type=> 'show_tags_row', :tag_type => 'best_for' } %>
+					<%= render :partial => 'helper', :locals => { :block_type=> 'show_tags_row', :tag_type => 'contents' } %>
+					<%= render :partial => 'helper', :locals => { :block_type=> 'show_tags_row', :tag_type => 'other' } %>
+				</tbody>
+			</table>
+		<% end %>
+		
+		<span class="fabric_label">Details</span>
+		<table id="fabric_details_table">
+			<tbody>
+			<% if !@fabric.yarn_count.nil? && !@fabric.yarn_count.full_count.nil? %>
+				<tr>
+					<td class="fabric_column_label">Yarn Count: </td>
+					<td class="fabric_column_value"><%= @fabric.yarn_count.full_count %></td>
+				</tr>
+			<% end %>
+			<% if !@fabric.width.nil?%>
+				<tr>
+					<td class="fabric_column_label">Width: </td>
+					<td class="fabric_column_value"><%= "#{@fabric.width}\"" %></td>
+				</tr>
+			<% end %>			
+			<% if !@fabric.reed_pick.nil? && !@fabric.reed_pick.full_reed_pick.nil? %>
+				<tr>
+					<td class="fabric_column_label">Reed / Pick: </td>
+					<td class="fabric_column_value"><%= @fabric.reed_pick.full_reed_pick %></td>
+				</tr>
+			<% end %>
+			<% if !@fabric.quantity.nil?%>
+				<tr>
+					<td class="fabric_column_label">Quantity: </td>
+					<% formatted_quantity = format_qty @fabric.quantity %>
+					<td class="fabric_column_value"><%= "#{formatted_quantity} meters" %></td>
+				</tr>
+			<% end %>
+			<% if !@fabric.price.nil?%>
+				<tr>
+					<td class="fabric_column_label">Price: </td>
+					<% formatted_price = rupees @fabric.price %>
+					<td class="fabric_column_value"><%= "#{formatted_price} / meter" %></td>
+				</tr>
+			<% end %>			
+		
+			</tbody>
+		</table>
+		
+	</div>
+</div>
