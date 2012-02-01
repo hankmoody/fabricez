@@ -252,8 +252,9 @@ DIV.user_name A
 	text-transform: capitalize;
 	font: normal normal 600 11pt/1.3 Arial;
 	float: left;
-	width: 75px;
+	max-width: 90px;
 	overflow: hidden;
+	text-align: left;
 }
 DIV.user_name
 {
@@ -454,11 +455,13 @@ UL.user_nav LI
 UL.user_nav LI A
 {
 	float: left;
-	width: 122px;
+	width: 120px;
 	padding-left: 10px;
+	max-width: 125px;
 	/*[disabled]margin:0 0 4px;*/
 	color: #FFFFFF;
 	font: normal 11pt calibri;
+	text-align: left;
 }
 DIV.user_name SPAN
 {

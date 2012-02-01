@@ -148,10 +148,11 @@ class Fabric < ActiveRecord::Base
       
       # Return all fabrics if none of the filters have been selected
       filter_key_list = tag_key_list = Tag.get_tagtype_list
-      filter_key_list << [ 'width', 'yarn_count', 'color']
+      filter_key_list += [ 'width', 'yarn_count', 'color']
       filters_found = false
       tags_found = false
       puts "DEBUG"
+      puts filter_key_list.inspect
       params.each_pair do |key, value|
         tags_found = true if tag_key_list.include?(key)
         filters_found = true if filter_key_list.include?(key)
@@ -162,12 +163,14 @@ class Fabric < ActiveRecord::Base
       
       filtered_fabrics = Fabric.all
       if params.keys.include?('color')
-        filtered_fabrics &= Color.filter(params[:color]).each.collect {|c| c.fabric}
+        filtered_fabrics &= Color.filter(params[:color], params[:tolerance].to_f).each.collect {|c| c.fabric}
       end
       
       if tags_found
         filtered_fabrics &= filter_by_tags(params)
       end
+      
+      return filtered_fabrics
       
     end
     

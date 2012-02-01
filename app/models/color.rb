@@ -211,7 +211,7 @@ class Color < ActiveRecord::Base
       lab = get_Lab_from_RGB(rgb[:red], rgb[:green], rgb[:blue])
       selected_colors = []
       Color.all.each do |col|
-        lab_col = {:L => col.ciel_L, :a => col.ciel_a, :b => col.ciel_b}
+        lab_col = {:L => col[:ciel_L], :a => col[:ciel_a], :b => col[:ciel_b]}
         del_e = compute_delta_e94(lab, lab_col)
         puts "delta e94 is #{del_e}\n"
         if del_e <= tolerance

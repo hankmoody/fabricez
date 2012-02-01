@@ -16,9 +16,12 @@ class Tag < ActiveRecord::Base
     end
     
     def get_names (tag_type = nil)
-      result = Tag.select("distinct name")
-      result = result.where(tagtype: tag_type) unless tag_type.nil?
-      result = result.map{ |t| t.name }
+      result = tag_type.nil? ? all : where(tagtype: tag_type)
+      result = result.sort_by { |t| -t.fabrics.count }.map{ |t| t.name }
+    end
+    
+    def get_ordered_materials
+      Tag.where(tagtype: 'material').order('name').map {|t| t.name}
     end
     
     def get_tagtype_list

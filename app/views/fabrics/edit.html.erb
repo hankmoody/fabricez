@@ -40,7 +40,7 @@
 					<% end %>
 				</select>
 				<select id="contents_material">
-					<% Tag.get_names('material').each do |mat| %>
+					<% Tag.get_ordered_materials.each do |mat| %>
 						<option value="<%=mat%>"><%=mat%></option>
 					<% end %>
 				</select>
