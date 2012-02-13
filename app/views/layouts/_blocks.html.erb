@@ -36,3 +36,18 @@
     		<%= render :partial => 'layouts/blocks', :locals => { :block_type=> 'show_tag_lis', :tag_type => tag_type } %>
 		</ul>
 	<% end %>	
+	
+	
+	<% if block_type == 'tag_radios' %>
+		<div class="tag_radio_options">
+			<ul>
+				<% checked_radio = 'Replace' %>
+				<% ['Add', 'Remove', 'Replace'].each do |ra| %>
+					<li>
+						<%= radio_button_tag "#{tag_type}_radio", ra, :checked => (ra == checked_radio) %>
+						<%= label "#{tag_type}_radio".to_sym, ra %>
+					</li>					
+				<% end %>
+			</ul>
+		</div>			
+	<% end %>

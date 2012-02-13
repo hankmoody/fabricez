@@ -27,6 +27,10 @@ class Tag < ActiveRecord::Base
     def get_tagtype_list
       Tag.select("distinct tagtype").map{|t| t.tagtype}
     end
+    
+    def get_default_tagtype_list
+      ["contents", "best_for", "weave", "pattern", "season", "material", "other"]
+    end
   end
 
 end

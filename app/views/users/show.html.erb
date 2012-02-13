@@ -4,9 +4,35 @@
 <h3>Fabric Portfolio</h3>
 
 <%= render 'layouts/navbartop'%>
-<%= render 'layouts/fabricalbum'%>
+<%= render :partial => 'layouts/fabricalbum', :locals => { :enable_select => true } %>
 
 </div>
 <div class="span-6 last">
 	<%= render :partial => 'layouts/uploadblock', :locals => { :hideUploadLink => false } %>
+
+	<div class = "side_links">
+		<%= link_to "Bulk Edit", bulk_edit_fabrics_path, :id => "bulk_edit_link" %>
+	</div>
+
 </div>
+
+<script>
+	$(function() {
+		$("A#bulk_edit_link").click(function() {
+			// Check if any of the checkboxes have been clicked
+			if ($("DIV#fabric_folder :checkbox:checked").length == 0) {
+				alert("No fabrics selected!");
+			}
+			else
+			{
+				var bulk_edit_url = $(this).prop("href") + "?";
+				var selected_fabrics = new Array();
+				$.each($("DIV#fabric_folder :checkbox:checked"), function() {
+					bulk_edit_url += "fabricid[]=" + $(this).val() + "&";
+				});
+				window.location = bulk_edit_url;
+			}
+			return false;
+		});
+	});		
+</script>

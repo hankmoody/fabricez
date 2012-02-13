@@ -1,0 +1,331 @@
+<%
+=begin
+	 
+	 Locals: 
+		- bulk_edit 
+		
+=end
+%>
+
+
+<div class="span-17 colborder">
+<% if bulk_edit %>
+
+	<div class="span-6 colborder">
+		<%= @f_errors.full_messages if @f_errors %>
+		<ul id="fabric_left_panel">
+			<% @fabrics.each do |fabric| %>
+				<li><%= image_tag fabric.attachment.url(:thumb), :width => 100, :title => fabric.code %></li>
+			<% end %>
+		</ul>
+	</div>
+	<div class="span-10 last">
+		<br>
+		<br>
+		<br>
+		<br>
+		<%= simple_form_for :fabric,
+			:method => :put,
+			:url => update_multiple_fabrics_path do |f| %>
+			<% @fabrics.each do |fabric| %>
+				<%= hidden_field_tag "fabric_ids[]", fabric.id %>
+			<% end %>
+			<table style="table-layout:fixed">
+				<colgroup>
+					<col width="10">
+					<col width="90">
+				</colgroup>
+				<tr>
+					<td><%= check_box_tag 'yarn_count_chk' %></td>
+					<td>
+						<div class="input_container">
+							<div class="disable_layer">
+							</div>
+							<%= f.simple_fields_for :yarn_count_attributes do |yc| %>
+								<%= yc.input :full_count, :required => false,
+									:wrapper_html => { :class => "bulk" }, 
+									:input_html => { :maxlength => 15, :size => 15, :id => 'fabric_f_yarn_count'}, 
+									:label => "Yarn Count", :disabled => true %>
+							<% end %>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><%= check_box_tag 'reed_pick_chk' %></td>
+					<td>
+						<div class="input_container">
+							<div class="disable_layer">
+							</div>
+							<%= f.simple_fields_for :reed_pick_attributes do |rp| %>
+								<%= rp.input :full_reed_pick, :required => false, 
+										:wrapper_html => { :class => "bulk" }, 
+										:input_html => { :maxlength => 15, :size => 15}, 
+										:label => "Reed / Pick", :disabled => true %>
+							<% end %>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><%= check_box_tag 'width_chk' %></td>
+					<td>
+						<div class="input_container">
+							<div class="disable_layer">
+							</div>
+							<%= f.input :width, :required => false, 
+							:wrapper_html => { :class => "bulk" }, 
+							:input_html => { :maxlength => 5, :size => 5, :type => 'string' }, 
+							:label => 'Width (inches)', :disabled => true %>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><%= check_box_tag 'quantity_chk' %></td>
+					<td>
+						<div class="input_container">
+							<div class="disable_layer">
+							</div>
+							<%= f.input :quantity, :required => false, 
+							:wrapper_html => { :class => "bulk" },
+							:input_html => { :maxlength => 10, :size => 10, :type => 'string' }, 
+							:label => 'Quantity (meters)', :disabled => true  %>
+						</div>
+					</td>
+				</tr>				
+				<tr>
+					<td><%= check_box_tag 'price_chk' %></td>
+					<td>
+						<div class="input_container">
+							<div class="disable_layer">
+							</div>
+							<%= f.input :price, :required => false, 
+							:wrapper_html => { :class => "bulk" },
+							:input_html => { :maxlength => 10, :size => 15, :type => 'string' }, 
+							:label => 'Price (Rs.)', :disabled => true  %>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><%= check_box_tag 'pattern_chk' %></td>
+					<td>
+						<div class="input_container">
+							<div class="disable_layer">
+							</div>
+							<%= f.input :pattern_tag_list, 
+							:required => false,
+							:wrapper_html => { :class => "bulk" },
+							:input_html => { :size => 25, :class => "force_titlecase" }, 
+							:label => 'Pattern'%>
+							<%= render :partial => 'layouts/blocks', :locals => { :block_type => 'tag_radios', :tag_type => 'pattern' } %>
+						</div>
+					</td>
+				</tr>	
+				<tr>
+					<td><%= check_box_tag 'weave_chk' %></td>
+					<td>
+						<div class="input_container">
+							<div class="disable_layer">
+							</div>
+							<%= f.input :weave_tag_list, 
+							:required => false,
+							:wrapper_html => { :class => "bulk" },
+							:input_html => { :size => 25, :class => "force_titlecase" }, 
+							:label => 'Weave'%>
+							<%= render :partial => 'layouts/blocks', :locals => { :block_type => 'tag_radios', :tag_type => 'weave' } %>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><%= check_box_tag 'season_chk' %></td>
+					<td>
+						<div class="input_container">
+							<div class="disable_layer">
+							</div>
+							<%= f.input :season_tag_list, 
+							:required => false,
+							:wrapper_html => { :class => "bulk" },
+							:input_html => { :size => 25, :class => "force_titlecase" }, 
+							:label => 'Season'%>
+							<%= render :partial => 'layouts/blocks', :locals => { :block_type => 'tag_radios', :tag_type => 'season' } %>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td><%= check_box_tag 'best_for_chk' %></td>
+					<td>
+						<div class="input_container">
+							<div class="disable_layer">
+							</div>
+							<%= f.input :best_for_tag_list, 
+							:required => false,
+							:wrapper_html => { :class => "bulk" },
+							:input_html => { :size => 25, :class => "force_titlecase", :id => 'fabric_bestfor_tag_list' }, 
+							:label => 'Best For'%>
+							<%= render :partial => 'layouts/blocks', :locals => { :block_type => 'tag_radios', :tag_type => 'best_for' } %>
+						</div>
+					</td>
+				</tr>															
+				<tr>
+					<td><%= check_box_tag 'contents_chk' %></td>
+					<td>
+						<div class="input_container">
+							<div class="disable_layer">
+							</div>
+							<div class="input string optional bulk">
+								<label class="string optional" for="fabric_contents_tag_list">Contents</label>
+								<select id="contents_percentage">
+									<% (1..100).to_a.reverse.each do |num| %>
+										<option value="<%= "#{num}%" %>"><%= "#{num}%" %></option>
+									<% end %>
+								</select>
+								<select id="contents_material">
+									<% Tag.get_ordered_materials.each do |mat| %>
+										<option value="<%=mat%>"><%=mat%></option>
+									<% end %>
+								</select>
+								<!--<span id="contents_add_button" class="contents_button"></span> -->
+								<button id="contents_add_button" class="contents_button"></button>
+								<br>
+								<table id="contents_entries">
+									<!--<tr><td>100% Cotton</td><td><span id="contents_del_button" class="contents_button"></span></td></tr>-->
+								</table>
+							</div>
+							<%= render :partial => 'layouts/blocks', :locals => { :block_type => 'tag_radios', :tag_type => 'contents' } %>
+
+							<%= f.input :contents_tag_list,
+								:required => false,
+								:input_html => { :size => 25, :style => "display:none;" }, 
+								:label => false, :disabled => true %>							
+						</div>
+					</td>
+				</tr>	
+				<tr>
+					<td><%= check_box_tag 'other_chk' %></td>
+					<td>
+						<div class="input_container">
+							<div class="disable_layer">
+							</div>
+							<%= f.input :other_tag_list, 
+							:required => false,
+							:wrapper_html => { :class => "bulk" },
+							:input_html => { :size => 25, :class => "force_titlecase"}, 
+							:label => 'Other'%>
+							<%= render :partial => 'layouts/blocks', :locals => { :block_type => 'tag_radios', :tag_type => 'other' } %>
+						</div>
+					</td>
+				</tr>								
+				<tr>
+					<td></td>
+					<td><%= f.button :submit %></td>
+				</tr>
+			</table>
+			
+		<% end %>
+	</div>
+
+
+<script>
+	$(function() {
+		
+		$('FORM.simple_form TABLE TD input:checkbox').prop('checked', false);
+		$('FORM.simple_form input:radio, input:text').prop('disabled', 'disabled');
+		$('FORM.simple_form SELECT,BUTTON').prop('disabled', 'disabled');
+		
+		$("FORM.simple_form TABLE TD input:checkbox").click(function() {
+			if ($(this).prop('checked')) {
+				var next_col = $(this).parent().next();
+				next_col.find('DIV.disable_layer').css('display', 'none');
+				next_col.find('DIV.input').removeClass('disabled');
+				next_col.find('INPUT,SELECT,BUTTON').removeAttr('disabled');
+				if (next_col.find('input:text').length > 0) {
+					next_col.find('input:text').focus();
+				}
+				
+				if (next_col.find('SELECT').length > 0) {
+					 next_col.find('SELECT').focus();
+				}
+			}
+			else {
+				var next_col = $(this).parent().next();
+				next_col.find('DIV.disable_layer').css('display', 'block');
+				next_col.find('DIV.input').addClass('disabled');
+				next_col.find('INPUT,SELECT,BUTTON').attr('disabled', 'disabled');
+			}
+		});
+		
+	}); 
+</script>
+
+
+<% else %>
+
+	<div class="span-8 colborder">
+		<%= @f_errors.full_messages if @f_errors %>
+		<br>
+		<%= image_tag @fabric.attachment.url(:original), :width => 320 %>
+		<br><br>
+		<span class="fabric_label">Colors Detected</span>
+		<%= render :partial => 'layouts/blocks', :locals => { :block_type => 'ColorBlock' } %>
+	</div>
+
+	<div class="span-8 last">
+		<span class="large quiet">Checks N Stripes</span>
+		<span class="fabric_label">Fabric Info</span>		
+		<%= simple_form_for @fabric, :validate => true  do |f| %>
+			<%= f.input :code, :label => "Design Code", :input_html => { :maxlength => 20, :size => 20 }, :required => true %>
+			<span class="fabric_label">Details</span>
+			<%= f.simple_fields_for :yarn_count do |yc| %>
+				<%= yc.input :full_count, :required => false, :input_html => { :maxlength => 15, :size => 15, :id => 'fabric_f_yarn_count' }, :label => "Yarn Count" %>
+			<% end %>
+			<%= f.simple_fields_for :reed_pick do |rp| %>
+				<%= rp.input :full_reed_pick, :required => false, :input_html => { :maxlength => 15, :size => 15 }, :label => "Reed / Pick" %>
+			<% end %>
+			<%= f.input :width, :required => false, :input_html => { :maxlength => 5, :size => 5, :type => 'string' }, :label => 'Width (inches)'  %>
+			<%= f.input :quantity, :required => false, :input_html => { :maxlength => 10, :size => 10, :type => 'string' }, :label => 'Quantity (meters)'  %>
+			<%= f.input :price, :required => false, :input_html => { :maxlength => 10, :size => 15, :type => 'string' }, :label => 'Price (Rs.)'  %>
+			<span class="fabric_label">Tags</span>
+			<%= f.input :pattern_tag_list, :input_html => { :'data-delimiter' => ', ', :size => 25, :class => "force_titlecase" }, :label => 'Pattern'%>
+			<%= f.input :weave_tag_list, :input_html => { :'data-delimiter' => ', ', :size => 25, :class => "force_titlecase" }, :label => 'Weave'%>
+			<%= f.input :season_tag_list, :input_html => { :'data-delimiter' => ', ', :size => 25, :class => "force_titlecase" }, :label => 'Season'%>
+			<%= f.input :best_for_tag_list, :input_html => { :'data-delimiter' => ', ', :size => 25, :id => 'fabric_bestfor_tag_list', :class => "force_titlecase" }, :label => 'Best For'%>
+			<!-- custom input controls for contents -->
+			<div class="input string optional">
+				<label class="string optional" for="fabric_contents_tag_list">Contents</label>
+				<select id="contents_percentage">
+					<% (1..100).to_a.reverse.each do |num| %>
+						<option value="<%= "#{num}%" %>"><%= "#{num}%" %></option>
+					<% end %>
+				</select>
+				<select id="contents_material">
+					<% Tag.get_ordered_materials.each do |mat| %>
+						<option value="<%=mat%>"><%=mat%></option>
+					<% end %>
+				</select>
+				<button id="contents_add_button" class="contents_button"></button>
+				<br>
+				<table id="contents_entries">
+					<!--<tr><td>100% Cotton</td><td><span id="contents_del_button" class="contents_button"></span></td></tr>-->
+				</table>				
+			</div>
+			<%= f.input :contents_tag_list, :input_html => { :'data-delimiter' => ', ', :size => 25, :style => "display:none;" }, :label => false %>
+			<%= f.input :other_tag_list, :input_html => { :'data-delimiter' => ', ', :size => 25, :class => "force_titlecase" }, :label => 'Other'%>
+			<%= #f.input :tag_list, :url => tags_autocomplete_tag_tag_name_path, :as => :autocomplete, 
+				#		:input_html => { :'data-delimiter' => ', ', :size => 25 }
+			%>
+			<%= f.button :submit %>
+			<% if !current_user.get_next_unproc.nil? %>
+				<%= f.button :submit, :value => "Update & Edit Next", :id => "update_edit_btn", :title => "Edit next Unprocessed fabric" %>
+			<% end %>
+			
+			<span id="pattern_tag_list_all" data-alltags="<%= Tag.get_name_list("pattern") %>" style="display:none;"></span>
+			<span id="weave_tag_list_all" data-alltags="<%= Tag.get_name_list("weave") %>" style="display:none;"></span>
+			<span id="contents_tag_list_all" data-alltags="<%= Tag.get_name_list("contents") %>" style="display:none;"></span>
+			<span id="season_tag_list_all" data-alltags="<%= Tag.get_name_list("season") %>" style="display:none;"></span>
+			<span id="bestfor_tag_list_all" data-alltags="<%= Tag.get_name_list("best_for") %>" style="display:none;"></span>
+			<span id="other_tag_list_all" data-alltags="<%= Tag.get_name_list("other") %>" style="display:none;"></span>
+		<% end %>
+	</div>
+
+<% end %>	
+	
+</div>
+

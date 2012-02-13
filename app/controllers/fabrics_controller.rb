@@ -39,7 +39,8 @@ class FabricsController < ApplicationController
     fabric_params = params[:fabric]
     fabric_params[:reed_pick_attributes][:_destroy] = '1' if fabric_params[:reed_pick_attributes][:full_reed_pick] == "" 
     fabric_params[:yarn_count_attributes][:_destroy] = '1' if fabric_params[:yarn_count_attributes][:full_count] == ""
-
+    
+    puts fabric_params.inspect
     @f_errors = nil
     ret = @fabric.update_attributes(fabric_params)
     @f_errors = @fabric.errors if !ret
@@ -91,6 +92,55 @@ class FabricsController < ApplicationController
     @fabric.published = true
     @fabric.save
     redirect_to(current_user)
+  end
+  
+  def bulk_edit
+    @fabrics = Fabric.where(id: params['fabricid'])
+  end
+  
+  def update_multiple
+    @fabrics = Fabric.find(params[:fabric_ids])
+    f_params = params["fabric"]
+    
+    # Non-fabric specific attributes
+    sel_all_params = {}
+    if params['yarn_count_chk'].eql?('1')
+      sel_all_params[:yarn_count_attributes] = f_params[:yarn_count_attributes]
+      sel_all_params[:yarn_count_attributes][:_destroy] = '1' if sel_params[:yarn_count_attributes][:full_count] == ""
+    end      
+    if params['reed_pick_chk'].eql?('1')
+      sel_all_params[:reed_pick_attributes] = f_params[:reed_pick_attributes]
+      sel_all_params[:reed_pick_attributes][:_destroy] = '1' if sel_params[:reed_pick_attributes][:full_reed_pick] == ""
+    end
+    
+    sel_all_params[:width] = f_params[:width] if params['width_chk'].eql?('1')
+    sel_all_params[:quantity] = f_params[:quantity] if params['quantity_chk'].eql?('1')
+    sel_all_params[:price] = f_params[:price] if params['price_chk'].eql?('1')
+    
+    # Generic logic to handle tags
+    tag_params = {}
+    Tag.get_default_tagtype_list.each do |t|
+      if params["#{t}_chk"].eql?('1')
+        sel_all_params["#{t}_tag_list".to_sym] = f_params["#{t}_tag_list".to_sym] if (params["#{t}_radio"] == 'Replace')
+        tag_params = {tag_type: t, action: 'add', list: f_params["#{t}_tag_list".to_sym]} if (params["#{t}_radio"] == 'Add')
+        tag_params = {tag_type: t, action: 'remove', list: f_params["#{t}_tag_list".to_sym]} if (params["#{t}_radio"] == 'Remove')
+      end
+    end
+     
+    # Update the fabrics    
+    @fabrics.each do |f|
+      sel_params = sel_all_params
+      if params['yarn_count_chk'].eql?('1')
+        sel_params[:yarn_count_attributes][:id] = f.yarn_count.id if !f.yarn_count.nil?
+      end      
+      if params['reed_pick_chk'].eql?('1')
+        sel_params[:reed_pick_attributes][:id] = f.reed_pick.id if !f.reed_pick.nil?
+      end
+      f.update_tags(tag_params) unless tag_params.empty?
+      f.update_attributes!(sel_params)
+    end
+
+    redirect_to(user_path, :notice => "Fabrics was successfully updated.")
   end
     
 end

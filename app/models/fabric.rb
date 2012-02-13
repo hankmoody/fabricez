@@ -97,7 +97,7 @@ class Fabric < ActiveRecord::Base
     puts "DEBUG: Pattern Tag List is #{self.pattern_tag_list}" if tag_type == "pattern"
   end
   
-  def tag_list (tag_type)
+  def tag_list (tag_type=nil)
     tag_array = self.tag_names(tag_type)
     tag_array.join(", ") unless tag_array.empty?
   end
@@ -140,6 +140,16 @@ class Fabric < ActiveRecord::Base
                                   blue: color[:blue],
                                   coverage: color[:coverage])
     end    
+  end
+  
+  def update_tags(tag_params)
+    n_tags = tag_params[:list].split(",").collect{ |t| t.strip }.delete_if{ |t| t.blank? }
+    e_tags = tag_names(tag_params[:tag_type])
+    e_tags = ((tag_params[:action] == 'remove') ? e_tags - n_tags : e_tags + n_tags).uniq
+    puts tag_params.inspect
+    puts e_tags.inspect
+    set_tag_list(e_tags.join(", "), tag_params[:tag_type])
+    save!
   end
   
   class << self

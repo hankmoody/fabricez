@@ -18,11 +18,11 @@ class UsersController < ApplicationController
   def show
     @user = current_user
     if @user.role.category == "admin"
-      @fabrics = Fabric.get_for_display_type("pending_review").page(params[:page]).per(9) 
+      @fabrics = Fabric.get_for_display_type("pending_review").page(params[:page]).per(params[:pagesize].to_i) 
     else
       # @fabrics = @user.get_for_display_type(params[:display]).page(params[:page]).per(9)
       # @fabrics = @user.get_for_display_type(params[:display]) 
-      @fabrics = Kaminari.paginate_array(@user.get_for_display_type(params[:display])).page(params[:page]).per(9) 
+      @fabrics = Kaminari.paginate_array(@user.get_for_display_type(params[:display])).page(params[:page]).per(params[:pagesize].to_i) 
     end
     @navlinks = { "All" => "all",
                   "Published" => "published",
@@ -30,6 +30,5 @@ class UsersController < ApplicationController
                   "Unprocessed" => "unprocessed" }
     # session[:return_to] ||= request.referer    
   end
-
 
 end
