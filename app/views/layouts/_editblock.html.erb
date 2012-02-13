@@ -15,7 +15,7 @@
 		<%= @f_errors.full_messages if @f_errors %>
 		<ul id="fabric_left_panel">
 			<% @fabrics.each do |fabric| %>
-				<li><%= image_tag fabric.attachment.url(:thumb), :width => 100, :title => fabric.code %></li>
+				<li><%= image_tag fabric.attachment.url(:thumb), :width => 90, :title => fabric.code %></li>
 			<% end %>
 		</ul>
 	</div>

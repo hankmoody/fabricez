@@ -17,12 +17,13 @@ class UsersController < ApplicationController
   # Creating a show action for User Model.
   def show
     @user = current_user
+    @pagesize = params[:pagesize].nil? ? 9 : params[:pagesize].to_i 
     if @user.role.category == "admin"
-      @fabrics = Fabric.get_for_display_type("pending_review").page(params[:page]).per(params[:pagesize].to_i) 
+      @fabrics = Fabric.get_for_display_type("pending_review").page(params[:page]).per(@pagesize) 
     else
       # @fabrics = @user.get_for_display_type(params[:display]).page(params[:page]).per(9)
       # @fabrics = @user.get_for_display_type(params[:display]) 
-      @fabrics = Kaminari.paginate_array(@user.get_for_display_type(params[:display])).page(params[:page]).per(params[:pagesize].to_i) 
+      @fabrics = Kaminari.paginate_array(@user.get_for_display_type(params[:display])).page(params[:page]).per(@pagesize) 
     end
     @navlinks = { "All" => "all",
                   "Published" => "published",

@@ -26,9 +26,9 @@
 	<div id="view_number">
 		<label id="select_view_no">View</label>
 		<select id="select_view_no">
-			<option value="<%= url_for(params.merge(:pagesize => 9))%>"  <%= "selected" if params[:pagesize].eql?('9')%> >10</option>
-			<option value="<%= url_for(params.merge(:pagesize => 54))%>" <%= "selected" if params[:pagesize].eql?('54')%> >50</option>
-			<option value="<%= url_for(params.merge(:pagesize => 99))%>" <%= "selected" if params[:pagesize].eql?('99')%> >100</option>
+			<option value="<%= url_for(params.merge(:pagesize => 9))%>"  <%= "selected" if @pagesize.eql?(9)%> >10</option>
+			<option value="<%= url_for(params.merge(:pagesize => 54))%>" <%= "selected" if @pagesize.eql?(54)%> >50</option>
+			<option value="<%= url_for(params.merge(:pagesize => 99))%>" <%= "selected" if @pagesize.eql?(99)%> >100</option>
 		</select>
 	</div>		
 </div>
