@@ -5,15 +5,18 @@ Fabricez::Application.routes.draw do
     collection do
       get 'bulk_edit'
       put 'update_multiple'
+      get 'portfolio'
+      get 'upload'
     end
   end
 
 
+  resources :users
   root :to => 'pages#home'
   match '/home', :to => 'pages#home'
   match '/explore', :to => 'pages#explore'
-  match '/user', :to => 'users#show' # Adding show action to User
-  match '/upload', :to => 'fabrics#upload'
+#  match '/user', :to => 'users#show' # Adding show action to User
+#  match '/upload', :to => 'fabrics#upload'
   match '/get-upload-info', :to => 'users#upload'
  
   

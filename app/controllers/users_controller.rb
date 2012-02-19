@@ -13,6 +13,15 @@ class UsersController < ApplicationController
     end
   end
   
+  def update
+    
+  end
+  
+  def edit
+    @user = current_user
+  end
+  
+    
   # Devise provides everything except show action
   # Creating a show action for User Model.
   def show

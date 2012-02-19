@@ -94,6 +94,23 @@ class FabricsController < ApplicationController
     redirect_to(current_user)
   end
   
+  def portfolio
+    @user = current_user
+    @pagesize = params[:pagesize].nil? ? 9 : params[:pagesize].to_i 
+    if @user.role.category == "admin"
+      @fabrics = Fabric.get_for_display_type("pending_review").page(params[:page]).per(@pagesize) 
+    else
+      # @fabrics = @user.get_for_display_type(params[:display]).page(params[:page]).per(9)
+      # @fabrics = @user.get_for_display_type(params[:display]) 
+      @fabrics = Kaminari.paginate_array(@user.get_for_display_type(params[:display])).page(params[:page]).per(@pagesize) 
+    end
+    @navlinks = { "All" => "all",
+                  "Published" => "published",
+                  "Pending Review" => "pending_review",
+                  "Unprocessed" => "unprocessed" }
+    # session[:return_to] ||= request.referer        
+  end
+  
   def bulk_edit
     @fabrics = Fabric.where(id: params['fabricid'])
   end
@@ -118,12 +135,12 @@ class FabricsController < ApplicationController
     sel_all_params[:price] = f_params[:price] if params['price_chk'].eql?('1')
     
     # Generic logic to handle tags
-    tag_params = {}
+    tag_params = []
     Tag.get_default_tagtype_list.each do |t|
       if params["#{t}_chk"].eql?('1')
         sel_all_params["#{t}_tag_list".to_sym] = f_params["#{t}_tag_list".to_sym] if (params["#{t}_radio"] == 'Replace')
-        tag_params = {tag_type: t, action: 'add', list: f_params["#{t}_tag_list".to_sym]} if (params["#{t}_radio"] == 'Add')
-        tag_params = {tag_type: t, action: 'remove', list: f_params["#{t}_tag_list".to_sym]} if (params["#{t}_radio"] == 'Remove')
+        tag_params << {tag_type: t, action: 'add', list: f_params["#{t}_tag_list".to_sym]} if (params["#{t}_radio"] == 'Add')
+        tag_params << {tag_type: t, action: 'remove', list: f_params["#{t}_tag_list".to_sym]} if (params["#{t}_radio"] == 'Remove')
       end
     end
      

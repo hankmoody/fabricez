@@ -143,12 +143,14 @@ class Fabric < ActiveRecord::Base
   end
   
   def update_tags(tag_params)
-    n_tags = tag_params[:list].split(",").collect{ |t| t.strip }.delete_if{ |t| t.blank? }
-    e_tags = tag_names(tag_params[:tag_type])
-    e_tags = ((tag_params[:action] == 'remove') ? e_tags - n_tags : e_tags + n_tags).uniq
-    puts tag_params.inspect
-    puts e_tags.inspect
-    set_tag_list(e_tags.join(", "), tag_params[:tag_type])
+    tag_params.each do |t_params|
+      n_tags = t_params[:list].split(",").collect{ |t| t.strip }.delete_if{ |t| t.blank? }
+      e_tags = tag_names(t_params[:tag_type])
+      e_tags = ((t_params[:action] == 'remove') ? e_tags - n_tags : e_tags + n_tags).uniq
+      puts t_params.inspect
+      puts e_tags.inspect
+      set_tag_list(e_tags.join(", "), t_params[:tag_type])
+    end
     save!
   end
   

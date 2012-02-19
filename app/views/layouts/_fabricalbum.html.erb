@@ -63,7 +63,7 @@
 				<div class="fabric_cell_action_links">
 					<ul class="design_info">
 						<% if (current_user && (current_user.owns_fabric?(fabric) || current_user.role.category == "admin")) %>
-							<li class="design_card_icon design_del_link"> <%= link_to "", fabric_path(fabric.id, :redirect_to => user_path(:display => params[:display])), 
+							<li class="design_card_icon design_del_link"> <%= link_to "", fabric_path(fabric.id, :redirect_to => portfolio_fabrics_path(:display => params[:display])), 
 																						:confirm => "Are you sure?", 
 																						:method => :delete,
 																						:title => "Delete"  %></li>
@@ -102,7 +102,7 @@
 											<% class_left_link = ""%>
 										<% end %>
 										<li class="design_card_icon design_del_link <%=class_left_link%>"><%= link_to "", 
-																									fabric_path(fabric.id, :redirect_to => user_path(:display => params[:display])), 
+																									fabric_path(fabric.id, :redirect_to => portfolio_fabrics_path(:display => params[:display])), 
 																									:confirm => "Are you sure?", 
 																									:method => :delete,
 																									:title => "Delete"  %></li>
