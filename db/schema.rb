@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120116003049) do
+ActiveRecord::Schema.define(:version => 20120219033618) do
 
   create_table "collections", :force => true do |t|
     t.string   "name"
@@ -52,6 +52,9 @@ ActiveRecord::Schema.define(:version => 20120116003049) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "logo_file_name"
+    t.string   "logo_content_type"
+    t.integer  "logo_file_size"
   end
 
   create_table "fabrics", :force => true do |t|
