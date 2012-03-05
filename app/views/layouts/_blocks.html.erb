@@ -1,6 +1,7 @@
 <!-- Locals: 
 		- block_type 
 		- tag_type
+		- heading_text
 -->
     <% if block_type == 'ColorBlock' %>
 	
@@ -50,4 +51,15 @@
 				<% end %>
 			</ul>
 		</div>			
+	<% end %>
+
+	<% if block_type == 'logo_header' %>
+		<div id="heading_top">
+			<div id="logo_top">
+				<%= image_tag current_user.detail.logo(:original), :width => 100 %>
+			</div>
+			<div id="text_top">
+				<h3><%= heading_text %></h3>
+			</div>
+		</div>
 	<% end %>

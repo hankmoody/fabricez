@@ -1,0 +1,44 @@
+<%
+=begin
+Locals
+	- show_header
+=end
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= @title %></title>
+  <%= javascript_include_tag 'jquery-1.6.2.min.js', 
+  							 'jquery-ui-1.8.16.custom.min.js',  
+							 'colorpicker',
+  						     'eye',
+  						     'chosen.jquery',
+  						     'jquery.url',  							 
+  							 'rails.js' , 
+  							 'rails.validations.js',
+  							 'rails.validations.custom.js' %>  
+
+  
+  <%= csrf_meta_tags %>  
+  <%= render 'layouts/stylesheets' %>
+  <%= yield(:head) %>  
+</head>
+<body>
+	<%= render 'layouts/header' if show_header %>
+	<div class="backfade">
+		<% if show_header %>
+		  <div class="container">
+		<% end %>
+			<%- flash.each do |name, msg| -%>
+			  <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
+			<%- end -%>	
+			<div class="section">
+				<%= yield %>
+			</div>
+		<% if show_header %>
+		  </div>
+		<% end %>
+	</div>
+</body>
+</html>

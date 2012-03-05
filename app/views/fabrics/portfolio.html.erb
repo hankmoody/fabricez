@@ -1,9 +1,8 @@
 <div class="span-18">
 
-<span class="large quiet">Checks N Stripes</span>
-<h3>Fabric Portfolio</h3>
+<%= render :partial => 'layouts/blocks', :locals => { :block_type => 'logo_header', :heading_text => 'Fabric Portfolio'} %>
 
-<%= render 'layouts/navbartop'%>
+<!-- <%= render 'layouts/navbartop'%> -->
 <%= render :partial => 'layouts/fabricalbum', :locals => { :enable_select => true } %>
 
 </div>

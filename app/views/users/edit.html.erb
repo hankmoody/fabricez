@@ -1,8 +1,23 @@
 <div class="span-18">
 
-		<%= simple_form_for @user, :url => user_path do |u| %>
-			
-			
+	<div class="edit_user_form">
+	<h2>Edit Account Details</h2>
+	<%= simple_form_for @user, :url => user_path do |u| %>
+		<%= u.simple_fields_for :detail do |d| %>
+			<%= d.input :logo, :label => "Company Logo" %>
+			<%= d.input :first_name, :required => false, :input_html => { :maxlength => 15, :size => 15} %>
+			<%= d.input :last_name, :required => false, :input_html => { :maxlength => 15, :size => 15} %>
+			<%= d.input :company_name, :required => false, :input_html => { :maxlength => 15, :size => 15} %>
+			<%= d.input :address1, :required => false, :input_html => { :maxlength => 15, :size => 15} %>
+			<%= d.input :address2, :required => false, :input_html => { :maxlength => 15, :size => 15} %>
+			<%= d.input :address3, :required => false, :input_html => { :maxlength => 15, :size => 15} %>
+			<%= d.input :country %>
+			<%= d.input :state, :required => false, :input_html => { :maxlength => 15, :size => 15} %>
+			<%= d.input :city, :required => false, :input_html => { :maxlength => 15, :size => 15} %>
+			<%= d.input :zip, :required => false, :input_html => { :maxlength => 15, :size => 15} %>
+			<%= d.input :phone, :required => false, :input_html => { :maxlength => 15, :size => 15} %>
+			<%= d.submit %>
 		<% end %>
-
-</script>
+	<% end %>
+	</div>
+</div>

@@ -14,7 +14,19 @@ class UsersController < ApplicationController
   end
   
   def update
-    
+    @user = User.find(params[:id])
+    ret = @user.update_attributes(params[:user])
+    @u_errors = @user.errors if !ret
+    respond_to do |format|
+      if ret
+        format.html { redirect_to(user_path(params[:id]), :notice => "Account details were successfully updated.") }
+        format.json { render :json => {}, :status => :ok }
+      else
+        format.html { render :action => "edit" }
+        format.json { render :json => @u_errors,
+                      :status => :unprocessable_entity }
+      end
+    end
   end
   
   def edit
@@ -25,20 +37,7 @@ class UsersController < ApplicationController
   # Devise provides everything except show action
   # Creating a show action for User Model.
   def show
-    @user = current_user
-    @pagesize = params[:pagesize].nil? ? 9 : params[:pagesize].to_i 
-    if @user.role.category == "admin"
-      @fabrics = Fabric.get_for_display_type("pending_review").page(params[:page]).per(@pagesize) 
-    else
-      # @fabrics = @user.get_for_display_type(params[:display]).page(params[:page]).per(9)
-      # @fabrics = @user.get_for_display_type(params[:display]) 
-      @fabrics = Kaminari.paginate_array(@user.get_for_display_type(params[:display])).page(params[:page]).per(@pagesize) 
-    end
-    @navlinks = { "All" => "all",
-                  "Published" => "published",
-                  "Pending Review" => "pending_review",
-                  "Unprocessed" => "unprocessed" }
-    # session[:return_to] ||= request.referer    
+    @user = User.find(params[:id])
   end
 
 end

@@ -1,0 +1,64 @@
+<% content_for (:head) do %>
+	<%= stylesheet_link_tag "jquery.Jcrop" %>
+	<%= javascript_include_tag "jquery.Jcrop.min" %>
+	<script type="text/javascript">
+	  $(function() {
+		<% x = (@fabric.crop_x.nil?) ? 0 : @fabric.crop_x %>
+		<% y = (@fabric.crop_y.nil?) ? 0 : @fabric.crop_y %>
+		<% w = (@fabric.crop_w.nil?) ? 600 : @fabric.crop_w %>
+		<% h = (@fabric.crop_h.nil?) ? 400 : @fabric.crop_h %>
+	    $('#cropbox').Jcrop({
+	    	onChange: update_crop,
+	    	onSelect: update_crop,
+	    	setSelect: [<%=x%>, <%=y%>, <%=w%>, <%=h%>],
+	    	aspectRatio: 3 / 2,
+	    	minSize: [600, 400]
+	    });
+	    
+	    var toggleLoading = function() {
+	    	$('#loading').toggle();
+	    };
+
+	    var toggleCompleted = function() {
+	    	$('#loading').toggle();
+      		window.opener.location.reload(); 
+      		window.close();
+	    };
+	    
+		$("form")
+		    .bind("ajax:beforeSend",  toggleLoading )
+		    .bind("ajax:complete", toggleCompleted )
+		    .bind("ajax:success", function(event, data, status, xhr) {
+
+		    });	    
+	  });
+	  
+	  function update_crop(coords) {
+	  	$('#crop_x').val(coords.x);
+	  	$('#crop_y').val(coords.y);
+	  	$('#crop_w').val(coords.w);
+	  	$('#crop_h').val(coords.h);   	
+	  }
+	  
+	</script>
+<% end %>
+
+<div class="prepend-2 span-17">
+<div id="croppable">
+	<div id="croppable_img">
+		<%= image_tag @fabric.attachment(:original), :id => "cropbox" %>		
+	</div>
+	<%= form_for @fabric, :url => update_crop_fabric_path(@fabric), :remote => true do |form| %>
+	  <% for attribute in [:crop_x, :crop_y, :crop_w, :crop_h] %>
+	    <%= form.hidden_field attribute, :id => attribute %>
+	  <% end %>
+	  <p><%= form.submit "Crop" %></p>
+  	<% end %>
+
+	<div id="loading" style="display:none;">
+    	<%= image_tag "ajax-loader.gif", :alt => "Please Wait..." %>
+	</div>
+	
+</div>
+</div>
+

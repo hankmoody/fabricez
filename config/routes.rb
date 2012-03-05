@@ -2,6 +2,10 @@ Fabricez::Application.routes.draw do
   devise_for :users
   
   resources :fabrics do
+    member do
+      get 'crop'
+      put 'update_crop'
+    end
     collection do
       get 'bulk_edit'
       put 'update_multiple'

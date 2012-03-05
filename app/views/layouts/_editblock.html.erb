@@ -258,10 +258,24 @@
 
 <% else %>
 
+<script>
+	$(function() {
+		$("#fabric_show_links").click(function() {
+			window.open("<%= crop_fabric_path(@fabric) %>", 
+						'Cropping window', 
+						'left=100,top=50,width=900,height=600,location=0,resizable=0', 
+						false)
+		});
+	});
+</script>
+
 	<div class="span-8 colborder">
 		<%= @f_errors.full_messages if @f_errors %>
 		<br>
-		<%= image_tag @fabric.attachment.url(:original), :width => 320 %>
+		<%= image_tag @fabric.attachment.url(:big), :width => 320 %>
+		<ul id="fabric_show_links">
+			<li><%= link_to "Crop Image", "#" %></li>		
+		</ul>
 		<br><br>
 		<span class="fabric_label">Colors Detected</span>
 		<%= render :partial => 'layouts/blocks', :locals => { :block_type => 'ColorBlock' } %>

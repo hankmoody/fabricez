@@ -37,10 +37,14 @@ class FabricsController < ApplicationController
     
     # Destroy empty nested attributes
     fabric_params = params[:fabric]
-    fabric_params[:reed_pick_attributes][:_destroy] = '1' if fabric_params[:reed_pick_attributes][:full_reed_pick] == "" 
-    fabric_params[:yarn_count_attributes][:_destroy] = '1' if fabric_params[:yarn_count_attributes][:full_count] == ""
+    if fabric_params[:reed_pick_attributes]
+      fabric_params[:reed_pick_attributes][:_destroy] = '1' if fabric_params[:reed_pick_attributes][:full_reed_pick] == "" 
+    end
+    if fabric_params[:yarn_count_attributes]
+      fabric_params[:yarn_count_attributes][:_destroy] = '1' if fabric_params[:yarn_count_attributes][:full_count] == ""
+    end
     
-    puts fabric_params.inspect
+    #puts fabric_params.inspect
     @f_errors = nil
     ret = @fabric.update_attributes(fabric_params)
     @f_errors = @fabric.errors if !ret
@@ -76,6 +80,8 @@ class FabricsController < ApplicationController
   
   def show
     @fabric = Fabric.find(params[:id])
+    # Just pick the user from the first collection
+    @user = @fabric.collections.first.user
   end
 
   def edit
@@ -85,6 +91,23 @@ class FabricsController < ApplicationController
     @fabric.build_yarn_count if @fabric.yarn_count.nil?
     @fabric.build_reed_pick if @fabric.reed_pick.nil?
     
+  end
+  
+  def crop
+    @fabric = Fabric.find(params[:id])
+    render :action => "crop", :layout => "noheader"
+  end
+
+  def update_crop
+    @fabric = Fabric.find(params[:id])
+    ret = @fabric.update_attributes(params["fabric"])
+    if ret
+      @fabric.cropping = true
+      @fabric.attachment.reprocess!(:big, :thumb)
+      render :text => "<script type='text/javascript'>  window.opener.location.reload(); window.close() </script>"
+    else
+      render :text => "Error encountered while updating this fabric."
+    end
   end
   
   def publish

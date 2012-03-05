@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120219033618) do
+ActiveRecord::Schema.define(:version => 20120302064308) do
 
   create_table "collections", :force => true do |t|
     t.string   "name"
@@ -70,6 +70,10 @@ ActiveRecord::Schema.define(:version => 20120219033618) do
     t.datetime "updated_at"
     t.boolean  "published",                                             :default => false
     t.boolean  "processed",                                             :default => false
+    t.integer  "crop_x",                                                :default => 0
+    t.integer  "crop_y",                                                :default => 0
+    t.integer  "crop_w",                                                :default => 600
+    t.integer  "crop_h",                                                :default => 400
   end
 
   create_table "fabrics_tags", :id => false, :force => true do |t|

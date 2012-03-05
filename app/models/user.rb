@@ -9,7 +9,8 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :recoverable, 
          :rememberable, :trackable, :validatable
 
-  attr_accessible :email, :password, :password_confirmation, :role, :username
+  attr_accessible :email, :password, :password_confirmation, :role, :username,
+                  :detail_attributes
   
   validates_presence_of  :email, :username  # password is automatically validated by devise
   validates_uniqueness_of :username, :email, :case_sensitive => false
@@ -20,7 +21,6 @@ class User < ActiveRecord::Base
   belongs_to :role
 
   accepts_nested_attributes_for :detail
-
 
   def attach_default_role
     Role.where(category: 'free').first.users.push(self) if role.nil?

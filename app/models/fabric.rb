@@ -9,26 +9,35 @@ class Fabric < ActiveRecord::Base
   
   accepts_nested_attributes_for :yarn_count, :reed_pick, :colors, :allow_destroy => true
   
+  attr_accessor :cropping
+  
   attr_accessible :code, :width, :price, :quantity, :published, :processed,
                   :attachment, :reed_pick, :yarn_count, :colors, :yarn_count_id,
                   :yarn_count_attributes, :reed_pick_id, :reed_pick_attributes,
-                  :colors_attributes
+                  :colors_attributes, :crop_x, :crop_y, :crop_w, :crop_h, :cropping
                   
   
   # Paperclip attachment
   has_attached_file :attachment,
       :storage => :s3,
       :styles => {
-        :original => {:geometry => '600x400#', :format => 'JPG' },
-        :thumb => {:geometry => '600x400#', :geometry_second => '200x200>', :format => 'JPG'}
+        :original => {:geometry => '850x500>', 
+                      :format => 'JPG'},
+        :big => {:geometry => '600x400#', 
+                 :format => 'JPG', 
+                 :processors => [:cropper] },
+        :thumb => {:geometry => '200x200>',
+                   :format => 'JPG', 
+                   :processors => [:cropper, :thumbnail]}
       },
-      :processors => [:thumbnail, :cropresize],
       :url => "/images/:attachment/:id/:style/:basename.:extension",
       :path => "/images/:attachment/:id/:style/:basename.:extension",
       :bucket => Fabricez::Application.config.s3_attachment_bucket,
       :s3_host_alias => Fabricez::Application.config.s3_host_alias,
       :s3_credentials => "#{Rails.root}/config/s3.yml",
-      :convert_options => {:original => "-quality 80 -strip", :thumb => "-quality 90 -strip" }
+      :convert_options => {:original => "-quality 80 -strip",
+                           :big => "-quality 80 -strip",
+                           :thumb => "-quality 90 -strip" }
   
   after_save :check_for_processed
 
@@ -49,6 +58,15 @@ class Fabric < ActiveRecord::Base
     define_method "#{virt_attr_name}=" do |tags_param|
       set_tag_list(tags_param, name)
     end
+  end
+  
+  def cropping?
+    !cropping.nil? && cropping
+  end
+
+  def attachment_geometry(style = :original)
+    @geometry ||= {}
+    @geometry[style] ||= Paperclip::Geometry.from_file(avatar.path(style))
   end
   
   def remove_tag(r_tag)

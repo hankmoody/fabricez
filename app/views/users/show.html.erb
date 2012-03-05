@@ -1,0 +1,55 @@
+<div class="span-18">
+
+	<h2>Account Details</h2>
+	<table id="account_details">
+		<tr>
+			<td>Logo</td>
+			<td><%= image_tag @user.detail.logo(:original) if !@user.detail.logo.nil?%></td>
+		</tr>
+		<tr>
+			<td>Name</td>
+			<td><%= @user.detail.first_name unless @user.detail.first_name.nil?%> <%= @user.detail.last_name unless @user.detail.last_name.nil?%></td>
+		</tr>
+		<tr>
+			<td>Company Name</td>
+			<td><%= @user.detail.company_name unless @user.detail.company_name.nil?%></td>
+		</tr>
+		<tr>
+			<td>Address 1</td>
+			<td><%= @user.detail.address1 unless @user.detail.address1.nil? %></td>
+		</tr>
+		<tr>
+			<td>Address 2</td>
+			<td><%= @user.detail.address2 unless @user.detail.address2.nil? %></td>
+		</tr>
+		<tr>
+			<td>Address 3</td>
+			<td><%= @user.detail.address3 unless @user.detail.address3.nil? %></td>
+		</tr>
+		<tr>
+			<td>Country</td>
+			<td><%= @user.detail.country unless @user.detail.country.nil? %></td>
+		</tr>
+		<tr>
+			<td>State</td>
+			<td><%= @user.detail.state unless @user.detail.state.nil? %></td>
+		</tr>
+		<tr>
+			<td>City</td>
+			<td><%= @user.detail.city unless @user.detail.city.nil? %></td>
+		</tr>
+		<tr>
+			<td>Zip</td>
+			<td><%= @user.detail.zip unless @user.detail.zip.nil? %></td>
+		</tr>
+		<tr>
+			<td>Contact Number</td>
+			<td><%= @user.detail.phone unless @user.detail.phone.nil? %></td>
+		</tr>
+	</table>
+	<br>
+	<div id="account_detail_links">
+	<%= link_to "Edit Account Details", edit_user_path(current_user.id) %>
+	</div>
+
+</script>

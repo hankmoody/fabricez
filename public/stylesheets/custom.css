@@ -2,6 +2,10 @@ HEADER
 {
 	height: 59px;
 }
+#account_detail_links
+{
+	margin: 0 0 0 16px;
+}
 A#bulk_edit_link
 {
 	margin: 0 0 0 90px;
@@ -30,6 +34,69 @@ BODY DIV.backfade
 	min-height: 800px;
 	padding-top: 20px;
 	padding-bottom: 30px;
+}
+DIV#croppable
+{
+	text-align: center;
+	margin: 5px 0;
+	position: relative;
+}
+DIV#croppable_img
+{
+	margin-bottom: 10px;
+}
+DIV#loading
+{
+	position: absolute;
+	left: 42%;
+	top: 33%;
+	z-index: 1000;
+	padding: 7%;
+	background: #FFFFFF;
+	border-radius: 5px;
+	opacity: 0.8;
+}
+DIV#logo_top
+{
+	float: left;
+	margin: 0 10px 0 0;
+}
+DIV#text_top
+{
+	float: left;
+	margin: 15px 0 0 25px;
+	padding: 0;
+	clear: right;
+}
+DIV#heading_top
+{
+	width: 100%;
+	height: 60px;
+	position: relative;
+	margin: 0 0 5px;
+	padding: 5px 0 5px 2px;
+}
+TABLE#account_details
+{
+	width: 501px;
+	border-collapse: collapse;
+	margin: 42px 0 0 15px;
+}
+TABLE#account_details TR
+{
+}
+TABLE#account_details TR TD
+{
+	border-bottom: 1px solid #B3B2B8;
+}
+TABLE#account_details TR TD:first-child
+{
+	font-weight: bold;
+	width: 128px;
+	height: 22px;
+}
+TABLE#account_details TR TD:last-child
+{
 }
 FORM.simple_form TABLE TD
 {
@@ -140,6 +207,10 @@ FORM DIV.bulk
 	width: 105px;
 	text-align: left;
 	text-decoration: none;
+}
+DIV.edit_user_form FORM DIV.input
+{
+	margin: 0 0 4px;
 }
 FORM DIV.disable_layer
 {

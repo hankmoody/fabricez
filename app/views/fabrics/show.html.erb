@@ -1,7 +1,7 @@
 <div class="span-18">
 	<div class="span-10 colborder">
 	
-		<%= image_tag @fabric.attachment.url(:original), :width => 390 %>
+		<%= image_tag @fabric.attachment.url(:big), :width => 390 %>
 		
 		<% if (current_user && (current_user.owns_fabric?(@fabric) || current_user.role.category == "admin")) %>
 			<ul id="fabric_show_links">
@@ -17,8 +17,8 @@
 	</div>
 	<div class="span-7 last">
 		
-		<span class="large quiet">Checks N Stripes</span>
-		
+		<%= image_tag @user.detail.logo(:original), :width => 75 %>
+		<!-- <span class="large quiet">Checks N Stripes</span> -->
 		<% fabric_code = (@fabric.code.nil?) ? 'Unprocessed' : @fabric.code  %>
 		<h3><%= fabric_code %></h3>
 		

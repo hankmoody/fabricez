@@ -8,7 +8,7 @@ development:
   encoding: unicode
   database: postgres
   username: postgres
-  password: Tribes2003
+  password: raj2512
   pool: 5
   
   # adapter: sqlite3
