@@ -2,6 +2,8 @@ class UsersController < ApplicationController
   
   # A user has to be signed in to view contents of this controller
   before_filter :authenticate_user!
+  skip_before_filter :authenticate_user!, :only => [:check_if_signed_in]
+  respond_to :html, :json
   
   def upload
     # Render in json format to pass information to upload widget
@@ -29,6 +31,40 @@ class UsersController < ApplicationController
     end
   end
   
+  def update_collection
+    @user = User.find(params[:id])
+    bAlreadyExists = true
+    if (!params['name_to_add'].nil?)
+      c_name = params['name_to_add'].titleize
+      bAlreadyExists = !@user.add_collection_name(c_name)
+    elsif (!params['name_to_remove'].nil?)
+      c_name = params['name_to_remove'].titleize
+      @user.remove_collection_name(c_name)
+    end
+    
+    if @user.save!
+      respond_with do |format|
+        format.html do
+          if request.xhr?
+            newhtml = render_to_string :partial => "collections/blocks", :layout => false, :locals => { :block_type => "CollectionNameList" }
+            render :json => { "added" => bAlreadyExists ? 0 : 1,
+                              "newhtml" => newhtml,
+                              "c_name" => c_name }.to_json
+          end
+        end
+      end
+    else
+      respond_with do |format|
+        format.html do
+          if request.xhr?
+            render :json => @collection.errors, :status => :unprocessable_entity
+          end
+        end
+      end
+    end
+    # render :json => { "added" => bAlreadyExists ? 0 : 1 }.to_json
+  end
+  
   def edit
     @user = current_user
   end
@@ -38,6 +74,10 @@ class UsersController < ApplicationController
   # Creating a show action for User Model.
   def show
     @user = User.find(params[:id])
+  end
+
+  def check_if_signed_in
+    render :json => { "returnValue" => user_signed_in? }.to_json
   end
 
 end

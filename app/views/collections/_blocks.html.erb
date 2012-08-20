@@ -1,0 +1,28 @@
+<%
+=begin 
+	Locals: 
+		- block_type 
+=end
+%>
+    <% if block_type == 'CollectionNameList' %>
+		<% @user.get_collections(true).each do |c| %>
+			<div class="collection_row">
+				<div class="collection_col_name">
+					<%= c.name.titleize %>
+				</div>
+				<div class="collection_col_remove">
+					<%= link_to "Remove", "#" %>
+				</div>
+				<div class="collection_add_fabrics" data-coll-link="<%=edit_collection_path(c.id)%>">
+					<%= link_to "Add Fabrics", "#" %>
+				</div>
+				
+				<% if !c.fabrics.empty? %>
+					<div class="collection_ezalbum" data-coll-link="<%=ezalbum_collection_path(c.id)%>">
+						<%= link_to "ezAlbum", "#" %>
+					</div>
+				<% end %>
+
+			</div>
+		<% end %>	
+	<% end %>

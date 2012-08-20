@@ -1,0 +1,77 @@
+<% content_for (:head) do %>
+	<script type="text/javascript">
+	  $(function() {
+	  	
+		$("form")
+		    .bind("ajax:beforeSend",  function(event, data, status, xhr) {
+	    		$('#collection_status').text('Adding...');
+	    	})
+		    .bind("ajax:success", function(event, data, status, xhr) {
+		    	var result = $.parseJSON(xhr.responseText);
+		    	var display_text = "Collection name already exists";
+		    	if (result.added) {
+		    		display_text = result.c_name + " added!"
+		    	}
+		    	$('#collection_status').text(display_text);
+		    	$('#collection_table').html(result.newhtml);
+		    	$('input#name_to_add').val('');
+		    	$('input#name_to_add').focus();
+		    });
+		    
+		$("DIV.collection_col_remove").live("click", function() {
+			var response = confirm("Are you sure?");
+			if (response == true) {
+				// Get the name to remove
+				c_name = $(this).parent().children().first().text().trim();
+				
+				$.ajax({
+					url: '<%=update_collection_user_path(@user)%>',
+					type: 'PUT',
+					datatype: 'json',
+					data: { name_to_remove: c_name },
+					success: function( data ) {
+						var result = $.parseJSON(data);
+				    	$('#collection_status').text(c_name+" removed!");
+				    	$('#collection_table').html(result.newhtml);						
+					}
+				});
+			}
+			return false;
+		});
+		
+		$("DIV.collection_add_fabrics").live("click", function() {
+			window.top.location = $(this).attr('data-coll-link');
+			return false;
+		});
+		
+		$("DIV.collection_ezalbum").live("click", function() {
+			window.top.location = $(this).attr('data-coll-link');
+			return false;
+		});		
+		
+			    
+	  });
+	  
+	  
+	  
+  	</script>	  	
+<% end %>
+
+<div class="prepend-1 span-8">
+	<h3>Manage Collections</h3>
+	<%= form_for @user, 
+				:url => update_collection_user_path(@user),
+				:remote => true,
+				:method => :put do |form| %>
+		<%= label_tag 'Collection Name' %>
+		<%= text_field_tag  'name_to_add', "", :style => "text-transform:capitalize;" %>
+		<%= form.submit "Add" %>
+	<% end %>
+	
+	<div id="collection_status"><%= @collections.count-1 %> collection(s) found </div>
+
+	<div id="collection_table">
+		<%= render :partial => "collections/blocks", :layout => false, :locals => { :block_type => "CollectionNameList" } %>
+	</div>
+	
+</div>

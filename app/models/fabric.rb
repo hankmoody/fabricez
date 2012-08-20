@@ -174,24 +174,35 @@ class Fabric < ActiveRecord::Base
   
   class << self
     
-    def filter_fabrics(params)
+    def filter_fabrics(params, fab_array = nil)
       
       # Return all fabrics if none of the filters have been selected
       filter_key_list = tag_key_list = Tag.get_tagtype_list
       filter_key_list += [ 'width', 'yarn_count', 'color']
       filters_found = false
       tags_found = false
-      puts "DEBUG"
-      puts filter_key_list.inspect
+      
+      @fab_q = nil
+      coll_id = (params.keys.include?('collection')) ? params['collection'] : nil
+      if coll_id
+        Collection.find(coll_id).fabrics
+      else
+        @fab_q = (fab_array) ? fab_array : Fabric.all
+      end
+      
+      # puts "DEBUG"
+      # puts filter_key_list.inspect
+      # puts params.inspect
+      
       params.each_pair do |key, value|
         tags_found = true if tag_key_list.include?(key)
         filters_found = true if filter_key_list.include?(key)
       end
-      return Fabric.all unless filters_found
+      return @fab_q unless filters_found
       
       puts "DEBUG filters found!"
       
-      filtered_fabrics = Fabric.all
+      filtered_fabrics = @fab_q
       if params.keys.include?('color')
         filtered_fabrics &= Color.filter(params[:color], params[:tolerance].to_f).each.collect {|c| c.fabric}
       end
@@ -215,9 +226,10 @@ class Fabric < ActiveRecord::Base
       params.each_pair do |key, value|
         if tag_type_list.include?(key)
           if count == 0
-            result = Fabric.joins(:tags).where('tags.name' => value)
+            # @fab_q = Collection.find(params['collection']).fabrics
+            result = @fab_q.joins(:tags).where('tags.name' => value)
           else
-            result = result & Fabric.joins(:tags).where('tags.name' => value)
+            result = result & @fab_q.joins(:tags).where('tags.name' => value)
           end
           count+=1
         end

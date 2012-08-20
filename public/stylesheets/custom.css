@@ -35,6 +35,24 @@ BODY DIV.backfade
 	padding-top: 20px;
 	padding-bottom: 30px;
 }
+.dotted_box
+{
+	border: 1px dotted #6B6B6B;
+	width: 136px;
+	padding: 10px;
+	position: relative;
+}
+#coll_select
+{
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	margin-bottom: 12px;
+}
+#add_to_coll_button
+{
+	margin: 0 auto 6px;
+}
 DIV#croppable
 {
 	text-align: center;
@@ -312,7 +330,7 @@ UL.tabs
 UL.tabs LI
 {
 	float: left;
-	font: bold 12px/12px "Helvetica Neue", Helvetica, Arial;
+	font: bold 12px / 12px "Helvetica Neue", Helvetica, Arial;
 	margin: 0 20px 0 0;
 	text-transform: uppercase;
 	padding-bottom: 8px;
@@ -550,7 +568,7 @@ DIV.user_name A
 	color: #DBF8C0;
 	text-decoration: none;
 	text-transform: capitalize;
-	font: normal normal 600 11pt/1.3 Arial;
+	font: normal normal 600 11pt / 1.3 Arial;
 	float: left;
 	max-width: 90px;
 	overflow: hidden;
@@ -615,7 +633,7 @@ SPAN.fabric_label
 	display: block;
 	padding: 0 0 0 2px;
 	text-transform: uppercase;
-	font: bold 8.5pt/1.9 helvetica;
+	font: bold 8.5pt / 1.9 helvetica;
 	color: #505055;
 	width: 125px;
 	/*[disabled]float:left;*/
@@ -846,4 +864,72 @@ SPAN.selected_params A
 	color: #504C4C;
 	text-decoration: none;
 	font: 1em Cambria;
+}
+DIV#collection_table
+{
+	display: table;
+	width: 265px;
+	margin: 15px 0 5px 47px;
+}
+DIV.collection_row
+{
+	display: table-row;
+}
+DIV.collection_col_name
+{
+	display: table-cell;
+	width: 34%;
+	font: 11pt Calibri;
+	padding: 2px 0 0;
+	overflow: hidden;
+}
+DIV.collection_col_remove
+{
+	display: table-cell;
+	padding: 2px 0 0;
+}
+DIV.collection_col_remove A
+{
+	text-decoration: none;
+	color: #6D6969;
+	font: 10pt Calibri;
+}
+DIV.collection_add_fabrics
+{
+	display: table-cell;
+	padding: 2px 0 0;
+}
+DIV#collection_status
+{
+	margin: 10px 0 0 10px;
+	border: 2px solid #C9B9B9;
+	border-radius: 4px;
+	width: 247px;
+	padding: 5px 0;
+	text-align: center;
+	color: #6E7165;
+	font: italic 9pt sans-serif;
+	background: #F9F9F9;
+}
+.section
+{
+	position: relative;
+}
+.modal
+{
+	/*[disabled]width:350px;*/
+	padding: 15px;
+	border: 2px solid #585454;
+	opacity: 0.9;
+	/*[disabled]border-radius:6px;*/
+	box-shadow: 0 0 20px #CCC;
+	background: #FFFFFF;
+	/*[disabled]position:absolute;*/
+	/*[disabled]left:153px;*/
+	/*[disabled]top:91px;*/
+	display: none;
+}
+A#manage_coll
+{
+	margin: 0px 0px 0px 62px;
 }

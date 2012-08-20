@@ -1,0 +1,163 @@
+<% content_for (:head) do %>
+	<%= stylesheet_link_tag    'buttons', :media => 'screen' %> 
+
+	<script type="text/javascript" charset="utf-8">
+
+		$(function () {
+			$(".filter_chosen").chosen();
+			
+			$(".filter_chosen").chosen().change(function() {
+				var filter_params = {};
+				// On change we want to scan through and collect all filter values
+				// and send over the search query again.
+				$(".chosen_tags").chosen().find("option:selected").each(function(index,value) {
+					var tag_type = $(this).parent().attr('data-tag-type');
+					var tag_name = $(this).text();
+					if (filter_params[tag_type] == undefined) {
+						filter_params[tag_type] = new Array();
+					}
+					filter_params[tag_type].push(tag_name);
+				});
+				
+				// AJAX call
+				$.ajax({
+					url: '<%=edit_collection_path(@collection)%>',
+					type: 'GET',
+					dataType: 'json',
+					data: filter_params,
+					success: function( data ) {
+				    	$('#fabric_album_block').html(data.newhtml);						
+					}
+				});				
+				
+			});
+			
+			$("#coll_select").change(function() {
+				var elem = $("select#coll_select option:selected");
+				var collection_edit_url = '/collections/'+ elem.val() +'/edit';
+				window.location = collection_edit_url;
+			});
+		});
+		
+	</script>			
+			
+<% end %>
+			
+
+
+<div class="span-18 colborder">
+
+	<%= render 	:partial => 'layouts/blocks', 
+				:locals => { :block_type => 'logo_header', :heading_text => 'Add Fabrics to Collection'} %>
+
+	<div id="fabric_album_block">
+		<%= render :partial => 'layouts/fabricalbum', 
+				   :locals => { :enable_select => true } %>				
+	</div>
+</div>
+
+
+<div class="span-5 last">
+	
+
+	<br><br><br>
+	<div class="tag-filter-container">
+		<span class="fabric_label_container"><span class="fabric_label">Filter</span></span>
+			<!-- <legend class="">Select Tags:</legend> -->
+			<%= render :partial => 'layouts/filterblock', :locals => { :filter_type=> 'TagSelect', :tag_type => 'pattern' } %>
+			<%= render :partial => 'layouts/filterblock', :locals => { :filter_type=> 'TagSelect', :tag_type => 'weave' } %>
+			<%= render :partial => 'layouts/filterblock', :locals => { :filter_type=> 'TagSelect', :tag_type => 'season' } %>
+			<%= render :partial => 'layouts/filterblock', :locals => { :filter_type=> 'TagSelect', :tag_type => 'contents' } %>
+			<%= render :partial => 'layouts/filterblock', :locals => { :filter_type=> 'TagSelect', :tag_type => 'other' } %>
+			<%= render :partial => 'layouts/filterblock', :locals => { :filter_type=> 'TagSelect', :tag_type => 'best_for' } %>
+	</div>
+	<br><br>
+	<div class="dotted_box">
+		<% coll_names = @user.get_collections(true) %>
+		<%= select_tag("coll_select", options_for_select((coll_names.collect {|c| [c.name, c.id]}), @collection.id))%>
+		<button class="medium magenta awesome" id="add_to_coll_button">Add Selected Fabrics</button>
+		
+	</div>
+</div>
+
+
+
+<%
+#		Overlays
+%>
+
+<div class="modal" id='coll_update_success'>
+	<%= @collection.name %> successfully updated!
+	<br><br>
+	<%= link_to 'Return to Portfolio', portfolio_fabrics_path, :class => 'awesome small blue' %>
+	<%= link_to 'Open ezAlbum', ezalbum_collection_path(@collection), :class => 'awesome small magenta' %>
+</div>
+
+
+<%= render :partial => 'layouts/dialogs', 
+		   :locals => { :js_variable_name => 'd_error',
+		   				:message => "No fabrics Selected! Please select at least one fabric.",
+		   				:dialog_type => 'notification' }	
+%>		
+
+<%= render :partial => 'layouts/dialogs', 
+		   :locals => { :js_variable_name => 'd_update_failed',
+		   				:message => "An error occurred while updating " + @collection.name + "!",
+		   				:dialog_type => 'notification' }	
+%>		
+
+<%= render :partial => 'layouts/dialogs', 
+		   :locals => { :js_variable_name => 'd_update_success',
+		   				:div_selector => '#coll_update_success' }	
+%>		
+
+
+<%
+
+# All the javascript handling overlays should be defined _after_ calling partial divs.
+
+%>
+
+
+<% content_for (:head) do %>			
+	<script type="text/javascript" charset="utf-8">		
+		$(document).ready(function () {
+			$("#add_to_coll_button").click(function() {				
+				// Check if any of the checkboxes have been clicked
+				if ($("DIV#fabric_folder :checkbox:checked").length == 0) {
+					d_error.data('overlay').load();
+				}
+				else
+				{
+					var selected_fabrics = '';
+					$.each($("DIV#fabric_folder :checkbox:checked"), function() {
+						selected_fabrics += "fabricid[]=" + $(this).val() + "&";
+					});
+					
+					$.ajax({
+						url: '<%=collection_path%>',
+						type: 'PUT',
+						dataType: 'json',
+						data: selected_fabrics,
+						async: false,
+						success: function( data ) {
+							if (data.returnValue) {
+								d_update_success.data('overlay').load();
+							}
+							else
+							{
+								d_update_failed.data('overlay').load();
+							}
+						} 
+					});					
+				}
+				return false;
+			});	
+			
+			
+		});
+	</script>
+<% end %>
+
+
+

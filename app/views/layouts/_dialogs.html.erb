@@ -1,0 +1,77 @@
+<%
+=begin
+
+This file contains the dialoging framework
+
+Locals with their default values
+ - Message   (nil)
+ - Dialog_type  ('notification')
+ - Top  ('30%')
+ - CloseOnClick (true)
+ - Opacity (0.9)
+ - dg_div_selector  (nil)
+ - js_variable_name
+
+
+=end
+
+%>
+
+<%
+# Local variables and defaults
+	message ||= nil
+	dialog_type ||= nil
+	top ||= '30%'
+	close_on_click ||= true
+	opacity ||= 0.9
+	div_selector ||= nil
+	js_variable_name ||= nil
+	mask_load_speed ||= 500
+
+%>
+
+
+<%
+# A notification dialog template with a pre-defined set of parameters
+# If dialog_type is set to 'notification', all other supplied parameters will be
+# overwritten
+%>
+
+<% if dialog_type.eql?('notification') %>
+	<div class="modal dg_notification">
+		<%= message %>
+	</div>
+	
+	<% 
+		div_selector = ".dg_notification"
+		top = '30%'
+		close_on_click = true
+		opacity = 0.9
+	%> 
+		
+<% end %>
+
+
+<% content_for (:head) do %>
+	<script type="text/javascript" charset="utf-8">
+		
+		var <%= js_variable_name %>;
+		$(function () {
+			
+			<%= js_variable_name %> = $("<%=div_selector%>").overlay({
+						mask: {
+							color: '#000000',
+							loadSpeed: <%=mask_load_speed%>,
+							closeSpeed: 0,
+							opacity: <%=opacity%>
+						},
+						closeOnClick: <%=close_on_click%>,
+						top: '<%=top%>'
+			});
+			
+		});
+	</script>			
+<% end %>
+
+
+

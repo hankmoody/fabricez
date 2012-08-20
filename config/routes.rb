@@ -1,5 +1,5 @@
 Fabricez::Application.routes.draw do
-  devise_for :users
+  devise_for :users, :controllers => {:sessions => 'sessions', :registrations => 'registrations'}
   
   resources :fabrics do
     member do
@@ -13,9 +13,23 @@ Fabricez::Application.routes.draw do
       get 'upload'
     end
   end
-
-
-  resources :users
+  
+  resources :collections do
+    member do
+      put 'filter'
+      get 'ezalbum'
+    end
+    collection do
+      get 'manage'
+      get 'refresh'
+    end
+  end
+  resources :users do
+    member do
+      put 'update_collection'
+      get 'check_if_signed_in'
+    end
+  end
   root :to => 'pages#home'
   match '/home', :to => 'pages#home'
   match '/explore', :to => 'pages#explore'

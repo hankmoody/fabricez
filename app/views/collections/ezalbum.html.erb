@@ -1,0 +1,522 @@
+<% content_for (:head) do %>
+	
+	<%= stylesheet_link_tag 'buttons', :media => 'screen' %> 
+	<%= stylesheet_link_tag	'ezalbum', :media => 'screen' %>
+	<%= stylesheet_link_tag	'flexslider', :media => 'screen' %>
+    <%= javascript_include_tag 'jquery.flexslider-min' %> 
+	 
+	  <script type="text/javascript">
+	  
+  		var g_selected_fabrics = Array(); 
+  				
+  		
+  		function increment_number() {
+			var item_count = Number($("#item_count").text()) + 1;				
+			$("#item_count").text(item_count);
+			
+			if (item_count > 0) {
+				$("#item_count").addClass('colored_num');
+				$("#no_selected_msg").css('display', 'none');
+			}
+  		}
+  		
+  		function decrement_number() {
+				
+			var item_count = Number($("#item_count").text()) - 1;				
+			$("#item_count").text(item_count);
+			
+			if (item_count == 0) {
+				$("#item_count").removeClass('colored_num');
+				$("#no_selected_msg").css('display', 'block')
+			}	  			
+  		}
+  		
+  		function select_a_fabric(fabric_id, fabric_url) {
+  			
+  			increment_number();
+  			
+  			var search_str = 'A[data-fabricid="'+fabric_id+'"]';
+  			
+  			// Search for selected button
+  			var found = $(".div_unselected").find(search_str);
+  			found.parent().css('display', 'none');
+  			found.parent().siblings().css('display', 'block');
+  			
+  			var fabric_elem = "";
+  			if (g_selected_fabrics.length > 0) {
+  				fabric_elem += "<hr class='horizontal_break_small'/>";
+  			}
+  			
+  			// Add to the overlay
+			fabric_elem += "<li>" +
+					"<div class='span-7 selected_first_col'>" +
+						"<img src='"+fabric_url+"'/>" +
+					"</div>" +
+					"<div class='span-5 selected_second_col last'>" +
+						"<a class='awesome small red overlay_unselect_button' data-fabricid='"+fabric_id+"'>Unselect</a>" +
+					"</div>" +
+				"</li>"; 
+				
+			$('UL#selected_list').append(fabric_elem);
+			
+			// Add it to the global array
+		  	g_selected_fabrics.push(fabric_id);		
+  			
+  		}
+  		
+  		function remove_a_fabric(fabric_id) {
+  			decrement_number();
+  			
+  			var search_str = 'A[data-fabricid="'+fabric_id+'"]';
+  			// Search for selected button
+  			var found = $(".div_selected").find(search_str);
+  			found.parent().css('display', 'none');
+  			found.parent().siblings().css('display', 'block'); 
+  			
+  			// Search for the entry in overlay
+ 			found = $("#selected_overlay").find(search_str);
+ 			
+ 			// Remove the horizontal divider
+			if (g_selected_fabrics[0] != fabric_id) {
+				found.parent().parent().prev("HR").remove();
+ 			}
+ 			else {
+ 				found.parent().parent().next("HR").remove();
+ 			}
+ 			
+ 			// Remove the entry from overlay
+ 			found.parent().parent().remove();
+ 			
+ 			// Remove from global array
+			var index = $.inArray(fabric_id, g_selected_fabrics);
+			g_selected_fabrics.splice(index, 1);		
+  		}
+  		
+  		
+		$(function(){
+		  //SyntaxHighlighter.all();
+		  
+			
+			$(".overlay_unselect_button").live('click', function() {
+				var fabric_id = $(this).attr('data-fabricid');
+				remove_a_fabric(fabric_id);
+			});		  
+		  
+			$(".select_button").click(function() {
+				
+				var fabric_id = $(this).attr('data-fabricid');
+				var fabric_url = $(this).attr('data-fabricurl')
+				select_a_fabric(fabric_id, fabric_url);
+			});
+			
+			$(".unselect_button").click(function() {		
+				var fabric_id = $(this).attr('data-fabricid');
+				remove_a_fabric(fabric_id);
+			});
+
+		  
+		});
+		
+		
+		
+		$(window).load(function(){
+			  $('#carousel').flexslider({
+			animation: "slide",
+			controlNav: false,
+			animationLoop: false,
+			slideshow: false,
+			itemWidth: 150,
+			itemMargin: 5,
+			keyboard: false,
+			asNavFor: '#slider',
+			  });
+		  
+		  $('#slider').flexslider({
+			animation: "slide",
+			controlNav: false,
+			animationLoop: false,
+			slideshow: false,
+			sync: "#carousel",
+			keyboard: true,
+			multipleKeyboard: true,
+			pausePlay: false,
+			start: function(slider){
+			  $('body').removeClass('loading');
+			        }
+			      });
+		    });
+	  </script>
+
+<% end %>
+
+		<div class="container">
+			
+			<div id="ez_header_container">
+				<div class="span-5 append-2">
+					<span id="logo_container">
+						fabricEZ
+					</span>
+					<span id="logo_beta">
+						(beta)
+					</span>
+				</div>
+				
+				<div class="span-8" id="ez_heading_container">
+					<span id="ez_heading">
+						<%= @collection.name %>
+					</span>						
+				</div>
+				
+				<div class="span-6">
+					<a id="share_button" class="awesome green medium" href="#">
+						Share this Album
+					</a>
+				</div>
+				<div class="span-3 last">
+					<span id="item_count">0</span>
+					<a id="basket_button" href="#">
+					</a>
+				</div>
+			</div>
+			
+			<div id="slider" class="flexslider">
+				<ul class="slides">
+					<% @collection.fabrics.each do |f| %>
+						<% @fabric = f %>
+						<li>
+							<div class="card">
+								<div class="span-15 colborder card_left">
+									<%= image_tag f.attachment.url(:big) %>
+								</div>
+								<div class="span-7 last">
+									<div class="card_right_bottom">
+										<% fabric_code = (@fabric.code.nil?) ? 'Unprocessed' : @fabric.code  %>
+										<h3><%= fabric_code %></h3>
+										
+										<%= render :partial => 'layouts/blocks', :locals => { :block_type => 'ColorBlock' } %>										
+
+										<!--<span class="fabric_label">Details</span>-->
+										<br>
+										<table id="fabric_details_table">
+											<tbody>
+											<% if !@fabric.yarn_count.nil? && !@fabric.yarn_count.full_count.nil? %>
+												<tr>
+													<td class="fabric_column_label">Yarn Count: </td>
+													<td class="fabric_column_value"><%= @fabric.yarn_count.full_count %></td>
+												</tr>
+											<% end %>
+											<% if !@fabric.width.nil?%>
+												<tr>
+													<td class="fabric_column_label">Width: </td>
+													<td class="fabric_column_value"><%= "#{@fabric.width}\"" %></td>
+												</tr>
+											<% end %>			
+											<% if !@fabric.reed_pick.nil? && !@fabric.reed_pick.full_reed_pick.nil? %>
+												<tr>
+													<td class="fabric_column_label">Reed / Pick: </td>
+													<td class="fabric_column_value"><%= @fabric.reed_pick.full_reed_pick %></td>
+												</tr>
+											<% end %>
+											<% if !@fabric.quantity.nil?%>
+												<tr>
+													<td class="fabric_column_label">Quantity: </td>
+													<% formatted_quantity = format_qty @fabric.quantity %>
+													<td class="fabric_column_value"><%= "#{formatted_quantity} meters" %></td>
+												</tr>
+											<% end %>
+											<% if !@fabric.price.nil?%>
+												<tr>
+													<td class="fabric_column_label">Price: </td>
+													<% formatted_price = rupees @fabric.price %>
+													<td class="fabric_column_value"><%= "#{formatted_price} / meter" %></td>
+												</tr>
+											<% end %>			
+										
+											</tbody>
+										</table>
+										
+										<% if !@fabric.tags.empty? %>
+											<!--<span class="fabric_label">Tags</span> -->
+											<br>
+											<table id="tag_table">
+												<tbody>
+													<%= render :partial => 'fabrics/helper', :locals => { :block_type=> 'show_tags_row', :tag_type => 'pattern' } %>
+													<%= render :partial => 'fabrics/helper', :locals => { :block_type=> 'show_tags_row', :tag_type => 'weave' } %>
+													<%= render :partial => 'fabrics/helper', :locals => { :block_type=> 'show_tags_row', :tag_type => 'season' } %>
+													<%= render :partial => 'fabrics/helper', :locals => { :block_type=> 'show_tags_row', :tag_type => 'best_for' } %>
+													<%= render :partial => 'fabrics/helper', :locals => { :block_type=> 'show_tags_row', :tag_type => 'contents' } %>
+													<%= render :partial => 'fabrics/helper', :locals => { :block_type=> 'show_tags_row', :tag_type => 'other' } %>
+												</tbody>
+											</table>
+										<% end %>
+																				
+										
+										
+									</div>
+									<div class="card_right_top">
+										<!--
+										<a class="button share_button" href="#">
+				  							Share this Design Catalog
+				  						</a>
+				  					-->
+				  						<div class="div_unselected">
+											<a class="awesome blue medium select_button" href="#" data-fabricid="<%=@fabric.id%>" data-fabricurl="<%=f.attachment.url(:thumb)%>">
+					  							Select this design
+					  						</a>
+				  						</div>
+				  						<div class="div_selected">
+											<a class="awesome red medium unselect_button" href="#" data-fabricid="<%=@fabric.id%>">
+					  							Unselect
+					  						</a>
+											<a class="awesome blue medium view_selected_button" href="#">
+					  							View Selected
+					  						</a>
+			  							</div>
+									</div>
+
+								</div>
+							</div>
+						</li>
+					<% end %>
+				</ul>
+			</div>
+			
+						
+			<div id="carousel" class="flexslider">
+			  <ul class="slides">
+			  	<% @collection.fabrics.each do |f| %>
+				    <li>
+				      <%= image_tag f.attachment.url(:thumb) %>
+				    </li>
+			  	<% end %>
+			  </ul>
+			</div>
+			
+			
+			
+		
+		
+<%
+#########################
+
+#       Overlays
+
+#########################
+%>
+
+
+			<div id="sign_up_overlay" class="ez_overlay span-14 modal">
+				
+				<div id="d_sign_up">
+					<h2>Sign up</h2>
+					<%= 
+						simple_form_for resource,
+										:as => resource_name,
+										:url => registration_path(resource),
+										:validate => true,
+										:remote => true do |f| %>
+						
+						<%=	f.simple_fields_for :detail do |d| %>
+						<%=		d.input :first_name, :required => false, :label_html => {:class => 'ez_label'}, :input_html => { :maxlength => 15, :class => 'ez_input'} %>
+						<%=		d.input :last_name, :required => false, :label_html => {:class => 'ez_label'}, :input_html => { :maxlength => 15, :class => 'ez_input'} %>
+						<%	end %>
+						<%=	f.input :email, :required => true, :label_html => {:class => 'ez_label'}, :input_html => { :maxlength => 15, :class => 'ez_input'} %>
+						<%=	f.input :password, :required => true, :label_html => {:class => 'ez_label'}, :input_html => { :maxlength => 15, :class => 'ez_input'} %>
+						<%=	f.input :password_confirmation, :required => true, :label => 'Re-Enter Password', :label_html => {:class => 'ez_label'}, :input_html => { :maxlength => 15, :class => 'ez_input'} %>
+						<%=	f.submit :value => 'Sign Up', :class => 'awesome blue medium' %>
+						<% end %>
+				</div>
+			</div>
+
+
+			<div id="sign_in_overlay" class="ez_overlay span-14 modal">
+				
+				<div id="d_sign_in" class="span-8 colborder">
+					<h2>Sign in</h2>
+<!-- 
+					<%= simple_form_for resource, 
+										:as => resource_name, 
+										:url => session_path(resource_name), 
+										:validate => true, 
+										:remote => true do |f| %>
+						<%= f.input :email, :required => true, :input_html => {:class => 'ez_input'} %>
+						<%= f.input :password, :input_html => {:class => 'ez_input'} %>
+						<%= f.submit :value => 'Sign In', :class => 'awesome blue medium' %>
+					<% end %> -->
+
+					<%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :remote => true) do |f| %>
+					  <%= f.label :email, :class => 'ez_label'%>
+					  <%= f.email_field :email, :class => "ez_input" %>					
+					  <%= f.label :password, :class => 'ez_label' %>
+					  <%= f.password_field :password, :class => "ez_input" %>
+					  <%= f.submit "Sign in", :class => "awesome medium blue" %>
+					<% end %>					</div>
+				<div id="b_sign_up" class="span-4 last">
+					<span id="sign_up_pitch">
+						Not a member? <br>Sign up with us. It takes less than a minute!
+					</span>
+					<a class="awesome orange large">Sign Up</a>
+				</div>
+
+			</div>
+
+			<div id="selected_overlay" class="ez_overlay span-14 modal">
+				
+				<div id="share_container">
+					<div id="b_share_selected" class="span-6 colborder">
+						<a href="#" class="awesome medium green">Share Selected</a>
+						<span id="d_share_selected">
+							Share the selected designs with your customers or buyers.
+						</span>
+					</div>
+					<div id="b_req_swatches" class="span-6 last">
+						<a href="#" class="awesome medium blue">Request Swatches</a>
+						<span id="d_req_swatches">
+							Ask a question or request samples for the selected designs.
+						</span>
+					</div>
+				</div>
+				<hr class="horizontal_break"/>
+				<ul id="selected_list">
+					<li id="no_selected_msg">
+						No fabrics selected.
+					</li>
+					
+					<!--
+					<li>
+						<div class="span-7 selected_first_col">
+							<%=image_tag("http://s3.amazonaws.com/cnsfabricstest/images/attachments/1/thumb/177.JPG?1327907999")%>
+						</div>
+						<div class="span-5 selected_second_col last">
+							<button class="awesome small black">Unselect</button>
+						</div>
+					</li>
+					-->
+				</ul>
+			</div>
+
+			<div id="not_implemented" class="ez_overlay span-14 modal" style="height:150px">
+					<h3 style="margin:30px">This functionality hasn't been implemented yet. Please check back soon!</h3>
+			</div>
+
+
+
+<%= render :partial => 'layouts/dialogs', 
+		   :locals => { :js_variable_name => 'd_selected_fabrics',
+		   				:div_selector => '#selected_overlay',
+		   				:top => '10%',
+		   				:opacity => 0.8 }	
+%>	
+<%= render :partial => 'layouts/dialogs', 
+		   :locals => { :js_variable_name => 'd_sign_in',
+		   				:div_selector => '#sign_in_overlay',
+		   				:top => '10%',
+		   				:opacity => 0.8,
+		   				:mask_load_speed => 0}	
+%>	
+				
+<%= render :partial => 'layouts/dialogs', 
+		   :locals => { :js_variable_name => 'd_sign_up',
+		   				:div_selector => '#sign_up_overlay',
+		   				:top => '10%',
+		   				:opacity => 0.8,
+		   				:mask_load_speed => 0}	
+%>	
+
+<%= render :partial => 'layouts/dialogs', 
+		   :locals => { :js_variable_name => 'd_not_implemented',
+		   				:div_selector => '#not_implemented',
+		   				:top => '30%',
+		   				:opacity => 0.8,
+		   				:mask_load_speed => 0}	
+%>		
+		
+<% content_for (:head) do %>			
+	<script type="text/javascript" charset="utf-8">		
+		$(document).ready(function () {
+			
+			var prevWindow = null;
+			
+			$("#basket_button, .view_selected_button").click(function() {				
+					d_selected_fabrics.data('overlay').load();
+				return false;
+			});	
+			
+			
+			$("#b_share_selected A, A#share_button, #b_req_swatches A").click(function() {
+
+				d_not_implemented.data('overlay').load();
+
+				// $.ajax({
+					// url: '<%=check_if_signed_in_user_path%>',
+					// type: 'GET',
+					// dataType: 'json',
+					// async: false,
+					// success: function( data ) {
+						// if (data.returnValue) {
+							// //alert(data.returnValue);
+							// //d_update_success.data('overlay').load();
+							// alert('You are already signed in!');
+						// }
+						// else
+						// {
+							// d_selected_fabrics.data('overlay').close();
+							// d_sign_in.data('overlay').load();
+						// }
+					// } 
+				// });					
+			});
+			
+			$("DIV#d_sign_in form")
+			    .bind("ajax:beforeSend",  function(event, data, status, xhr) {
+		    		//$('#collection_status').text('Adding...');
+		    	})
+			    .bind("ajax:success", function(event, data, status, xhr) {
+			    	var result = $.parseJSON(xhr.responseText);
+			    	if (result.success) {
+			    		alert('sign in successful!');
+			    	}
+			    	else {
+			    		//alert('sign in failed!');
+			    		$('DIV#sign_in_overlay').effect("shake", {times:3, distance:10}, 30);
+			    	}
+			    	// var display_text = "Collection name already exists";
+			    	// if (result.added) {
+			    		// display_text = result.c_name + " added!"
+			    	// }
+			    	// $('#collection_status').text(display_text);
+			    	// $('#collection_table').html(result.newhtml);
+			    	// $('input#name_to_add').val('');
+			    	// $('input#name_to_add').focus();
+		    });		
+		    
+		    $("#b_sign_up A").click(function() {
+		    	d_sign_up.data('overlay').load();
+		    });	
+		    
+			$("DIV#d_sign_up form")
+			    .bind("ajax:beforeSend",  function(event, data, status, xhr) {
+		    		//$('#collection_status').text('Adding...');
+		    	})
+			    .bind("ajax:success", function(event, data, status, xhr) {
+			    	var result = $.parseJSON(xhr.responseText);
+			    	if (result.success) {
+			    		
+			    	}
+			    	else {
+			    		//alert('sign in failed!');
+			    		$('DIV#sign_up_overlay').effect("shake", {times:3, distance:10}, 30);
+			    	}
+		    });				    
+						
+		});
+	</script>
+<% end %>		
+		
+		
+		
+	</div> <!-- End Div Container -->
+
+		
+
+							
