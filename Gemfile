@@ -38,7 +38,8 @@ gem 'jquery-rails'
 # gem 'ruby-debug19', :require => 'ruby-debug'
 
 gem "rspec-rails", :group => [:test, :development]
-gem 'ruby-debug19', :require => 'ruby-debug', :group => [:development, :test]
+gem 'debugger', :group => [:development, :test]
+
 group :test do
   # Pretty printed test output
   gem 'turn', :require => false
