@@ -1,31 +1,42 @@
-<div class="header_wrap">
+<div class="navbar navbar-default navbar-fixed-top" role="navigation">
 	<div class="container">
-		<header>
-			<p>Hello World!</p>
-			<h3><%= link_to "FabricEZ.com (beta!)", home_path %></h3>
-			<% if user_signed_in? %>
-				<div class="sign_in">
-					<%= link_to 'Sign Out', destroy_user_session_path, :method => :delete %>
-				</div>
-				<div class="user_name">
-					<%= link_to current_user.username, portfolio_fabrics_path %>
-					<ul class="user_nav">
-						<li><%= link_to "My Account", user_path(current_user.id) %></li>
-						<li><%= link_to "Fabric Portfolio", portfolio_fabrics_path %></li>
-						<li><%= link_to "Upload Fabrics", upload_fabrics_path %></li>
-					</ul>
-				</div>
-			<% else %>	
-				<div class="sign_in">
-					<%= link_to 'Sign In', new_user_session_path %>	
-				</div>	
-			<% end %>
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            	<span class="sr-only">Toggle navigation</span>
+            	<span class="icon-bar"></span>
+            	<span class="icon-bar"></span>
+            	<span class="icon-bar"></span>
+         	</button>
+			<%= link_to "FabricEZ.com (beta!)", home_path, class: "navbar-brand" %></h3>
+		</div>
+		<div class="navbar-collapse collapse">
+			<ul class="nav navbar-nav">
+				<li><%= link_to "Home", home_path %></li>
+				<li><a href="#">About</a></li>
+				<li><a href="#">Contact</a></li>
 
-		</header>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<% if user_signed_in? %>
+							<li><%= link_to current_user.username , portfolio_fabrics_path %></li>
+							<li><%= link_to 'Log Out', destroy_user_session_path, :method => :delete %></li> 
+							<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">My Options <b class="caret"></b></a>
+								<ul class="dropdown-menu">
+									<li><%= link_to "My Account", user_path(current_user.id) %></li>
+									<li><%= link_to "Fabric Portfolio", portfolio_fabrics_path %></li>
+									<li><%= link_to "Upload Fabrics", upload_fabrics_path %></li>
+								</ul>
+							</li>
+				<% else %>
+						<li><%= link_to 'Log In', new_user_session_path %></li>
+				<% end %>
+			</ul>
+		</div>
+		
 	</div>
 </div>
 
-
+<!--
 <script type="text/javascript" charset="utf-8">
 	$(document).ready(function() {
 		$("ul.user_nav").parent().append("<span></span>");		
@@ -44,3 +55,4 @@
 		
 	});
 </script>
+-->
