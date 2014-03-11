@@ -1,26 +1,28 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.1'
+gem 'rails', '3.2'
 
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
 gem 'pg'
-gem "rake", "0.8.7"
+#gem "rake", "0.8.7"
 gem 'devise'
 gem 'paperclip' , :path => "vendor/gems/paperclip"
 gem 'kaminari'
 gem 'aws-sdk'
 gem "simple_form"
-gem 'client_side_validations'
-
+#gem 'client_side_validations'
+gem 'bootstrap-sass'
+#gem 'sprockets', '>= 2.10.1'
 
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
-#  gem 'sass-rails',   '~> 3.1.4'
-  gem 'coffee-rails', '~> 3.1.1'
+  gem 'sass-rails', "~> 3.2.3"
+  gem 'coffee-rails', '~> 3.2.1'
   gem 'uglifier', '>= 1.0.3'
+  gem 'jquery-fileupload-rails'
 end
 
 gem 'jquery-rails'

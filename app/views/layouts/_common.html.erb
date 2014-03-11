@@ -8,39 +8,20 @@ Locals
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= @title %></title>
-
-  <%= javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', 
-  							 'jquery.tools.min',  
-  							 'jquery-ui-1.8.16.custom.min.js',
-							 'colorpicker',
-  						     'eye',
-  						     'chosen.jquery',
-  						     'jquery.url',  							 
-  							 'rails.js' , 
-  							 'rails.validations.js',
-  							 'rails.validations.custom.js' %>  
-
+<title><%= @title %></title>
   <%= csrf_meta_tags %>  
-  <%= render 'layouts/stylesheets' %>
+  <%= stylesheet_link_tag 'application' %>
+  <%= javascript_include_tag 'application' %>  
   <%= yield(:head) %>  
 </head>
-<body>
-	<%= render 'layouts/header' if show_header %>
-	<% if show_header %>
-		<div class="backfade">
-		  <div class="container">
-	<% end %>
-			<%- flash.each do |name, msg| -%>
-			  <%= content_tag :div, msg, :id => "flash_#{name}" if msg.is_a?(String) %>
-			<%- end -%>	
-			<div class="section">
-				<%= yield %>
-			</div>
-	<% if show_header %>
-		  </div>
-		</div>
-	<% end %>
-
+<body class='<%= controller_name %> <%= action_name %>'>
+	<%= render 'layouts/header'%>
+  <div id="main" role="main">
+    <div class="container">
+		  <%= yield %>
+    </div>
+    <footer>
+    </footer>  
+  </div>
 </body>
 </html>
