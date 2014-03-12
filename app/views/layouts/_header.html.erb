@@ -12,7 +12,6 @@
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
         <% if user_signed_in? %>
-          <li><%= link_to current_user.username , "#" %></li>
           <li><%= link_to "My Account", user_path(current_user.id) %></li>
           <li><%= link_to "Fabric Portfolio", portfolio_fabrics_path %></li>
           <li><%= link_to "Upload Fabrics", upload_fabrics_path %></li>
