@@ -1,51 +1,26 @@
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            	<span class="sr-only">Toggle navigation</span>
-            	<span class="icon-bar"></span>
-            	<span class="icon-bar"></span>
-            	<span class="icon-bar"></span>
-         	</button>
-			<%= link_to "FabricEZ.com (alfa!)", home_path, class: "navbar-brand" %></h3>
-		</div>
-		<nav class="navbar-collapse collapse">
-			<ul class="nav navbar-nav navbar-right">
-				<% if user_signed_in? %>
-							<li><%= link_to current_user.username , portfolio_fabrics_path %></li>
-							<li><%= link_to 'Log Out', destroy_user_session_path, :method => :delete %></li> 
-							<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">My Options <b class="caret"></b></a>
-								<ul class="dropdown-menu">
-									<li><%= link_to "My Account", user_path(current_user.id) %></li>
-									<li><%= link_to "Fabric Portfolio", portfolio_fabrics_path %></li>
-									<li><%= link_to "Upload Fabrics", upload_fabrics_path %></li>
-								</ul>
-							</li>
-				<% else %>
-						<li><%= link_to 'Log In', new_user_session_path %></li>
-				<% end %>
-			</ul>
-		</nav>
-	</div>
-</div>
-
-<!--
-<script type="text/javascript" charset="utf-8">
-	$(document).ready(function() {
-		$("ul.user_nav").parent().append("<span></span>");		
-		$("DIV.user_name SPAN").click(function() {
-			$(this).parent().find("ul.user_nav").slideDown('fast').show();
-			
-			$("DIV.user_name").parent().hover(function() {
-				$(this).parent().find("ul.user_nav").slideUp('slow');
-			});		
-			
-		});
-		
-		$("DIV.user_name").hover(function() {
-			$("DIV.user_name SPAN").trigger('click');
-		});
-		
-	});
-</script>
--->
+<nav class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+          </button>
+      <%= link_to "FabricEZ.com (alpha!)", home_path, class: "navbar-brand" %></h3>
+    </div>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-right">
+        <% if user_signed_in? %>
+              <li><%= link_to current_user.username , "{#}" %></li>
+              <li><%= link_to "My Account", user_path(current_user.id) %></li>
+              <li><%= link_to "Fabric Portfolio", portfolio_fabrics_path %></li>
+              <li><%= link_to "Upload Fabrics", upload_fabrics_path %></li>
+              <li><%= link_to 'Log Out', destroy_user_session_path, :method => :delete %></li> 
+        <% else %>
+            <li><%= link_to 'Log In', new_user_session_path %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</nav>
