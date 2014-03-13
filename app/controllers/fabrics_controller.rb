@@ -21,7 +21,7 @@ class FabricsController < ApplicationController
   def create
     # Used for the upload form
     @user = current_user
-    @fabric = Fabric.new(params[:fabric].merge(:code => "Unprocessed"))
+    @fabric = Fabric.new(fabric_params.merge(:code => "Unprocessed"))
     if (@fabric.save)
       @fabric.extract_color_info
       @fabric.save
@@ -36,7 +36,6 @@ class FabricsController < ApplicationController
     @fabric = Fabric.find(params[:id])
     
     # Destroy empty nested attributes
-    fabric_params = params[:fabric]
     if fabric_params[:reed_pick_attributes]
       fabric_params[:reed_pick_attributes][:_destroy] = '1' if fabric_params[:reed_pick_attributes][:full_reed_pick] == "" 
     end
@@ -183,4 +182,18 @@ class FabricsController < ApplicationController
     redirect_to(user_path, :notice => "Fabrics was successfully updated.")
   end
     
+private
+
+  def fabric_params
+    params.require(:fabric).permit(:code, :width, :price, :quantity, :published, :processed,
+                                   :attachment, :reed_pick, :yarn_count, :colors, :yarn_count_id,
+                                   :yarn_count_attributes, :reed_pick_id, :reed_pick_attributes,
+                                   :colors_attributes, :crop_x, :crop_y, :crop_w, :crop_h, :cropping)
+  end
+
+  def yarn_count_params
+    params.require(:yarn_count).permit(:full_count, :warp_ply_count, :weft_ply_count, 
+                                       :warp_yarn_thickness, :weft_yarn_thickness)
+  end
+
 end

@@ -5,9 +5,6 @@ class Color < ActiveRecord::Base
   # Accessor
   attr_reader :hexvalue, :ciel_L, :ciel_a, :ciel_b   
   
-  # Accessibility
-  attr_accessible :red, :green, :blue, :hexvalue, :ciel_L, :ciel_a, :ciel_b 
-  
   def hexvalue
     "\##{red.to_s(16)}#{green.to_s(16)}#{blue.to_s(16)}"
   end

@@ -11,45 +11,39 @@ class Fabric < ActiveRecord::Base
   
   attr_accessor :cropping
   
-  attr_accessible :code, :width, :price, :quantity, :published, :processed,
-                  :attachment, :reed_pick, :yarn_count, :colors, :yarn_count_id,
-                  :yarn_count_attributes, :reed_pick_id, :reed_pick_attributes,
-                  :colors_attributes, :crop_x, :crop_y, :crop_w, :crop_h, :cropping
-                  
-  
   # Paperclip attachment
   has_attached_file :attachment,
-      :storage => :s3,
-      :styles => {
-        :original => {:geometry => '850x500>', 
-                      :format => 'JPG'},
-        :big => {:geometry => '600x400#', 
+    :storage => :s3,
+    :styles => {
+      :original => {:geometry => '850x500>', 
+                    :format => 'JPG'},
+      :big => {:geometry => '600x400#', 
+               :format => 'JPG', 
+               :processors => [:cropper] },
+      :thumb => {:geometry => '200x200>',
                  :format => 'JPG', 
-                 :processors => [:cropper] },
-        :thumb => {:geometry => '200x200>',
-                   :format => 'JPG', 
-                   :processors => [:cropper, :thumbnail]}
-      },
-      :url => "/images/:attachment/:id/:style/:basename.:extension",
-      :path => "/images/:attachment/:id/:style/:basename.:extension",
-      :bucket => Fabricez::Application.config.s3_attachment_bucket,
-      :s3_host_alias => Fabricez::Application.config.s3_host_alias,
-      :s3_credentials => "#{Rails.root}/config/s3.yml",
-      :convert_options => {:original => "-quality 80 -strip",
-                           :big => "-quality 80 -strip",
-                           :thumb => "-quality 90 -strip" }
+                 :processors => [:cropper, :thumbnail]}
+    },
+    :url => "/images/:attachment/:id/:style/:basename.:extension",
+    :path => "/images/:attachment/:id/:style/:basename.:extension",
+    :bucket => Fabricez::Application.config.s3_attachment_bucket,
+    :s3_host_alias => Fabricez::Application.config.s3_host_alias,
+    :s3_credentials => "#{Rails.root}/config/s3.yml",
+    :convert_options => {:original => "-quality 80 -strip",
+                         :big => "-quality 80 -strip",
+                         :thumb => "-quality 90 -strip" }
   
   after_save :check_for_processed
 
   validates_presence_of :code
-  validates_format_of :quantity, :with => /^\d*\.?\d*$/, :allow_blank => true
-  validates_format_of :width, :with => /^\d*$/, :allow_blank => true
-  validates_format_of :price, :with => /^\d*\.?\d*$/, :allow_blank => true
+  validates_format_of :quantity, :with => /\A\d*\.?\d*\z/, :allow_blank => true
+  validates_format_of :width, :with => /\A\d*\z/, :allow_blank => true
+  validates_format_of :price, :with => /\A\d*\.?\d*\z/, :allow_blank => true
   
   # Virtual Attributes
   ['pattern', 'other', 'contents', 'best_for', 'weave', 'season'].each do |name|
     virt_attr_name = "#{name}_tag_list"
-    attr_accessible virt_attr_name.to_sym
+    #attr_accessible virt_attr_name.to_sym
 
     define_method virt_attr_name do
       tag_list(name)

@@ -24,7 +24,4 @@ class ReedPick < ActiveRecord::Base
     end
   end
 
-  # Accessibility
-  attr_accessible :full_reed_pick, :reed, :pick
-
 end

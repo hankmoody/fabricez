@@ -47,10 +47,6 @@ class YarnCount < ActiveRecord::Base
     self.warp_yarn_thickness = count_hash[:thickness]
   end
   
-  
-  # Accessibility
-  attr_accessible :full_count, :warp_ply_count, :weft_ply_count, :warp_yarn_thickness, :weft_yarn_thickness
-  
   private
   def parse_count (count)
     # This method parses counts in one of following formats

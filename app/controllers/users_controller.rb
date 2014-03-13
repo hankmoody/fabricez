@@ -17,7 +17,7 @@ class UsersController < ApplicationController
   
   def update
     @user = User.find(params[:id])
-    ret = @user.update_attributes(params[:user])
+    ret = @user.update_attributes(user_params)
     @u_errors = @user.errors if !ret
     respond_to do |format|
       if ret
@@ -78,6 +78,13 @@ class UsersController < ApplicationController
 
   def check_if_signed_in
     render :json => { "returnValue" => user_signed_in? }.to_json
+  end
+
+private
+
+  def user_params
+    params.require(:user).permit(:email, :password, :password_confirmation, :role, 
+                                 :username, :detail_attributes)
   end
 
 end

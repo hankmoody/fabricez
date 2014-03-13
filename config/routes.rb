@@ -31,11 +31,11 @@ Fabricez::Application.routes.draw do
     end
   end
   root :to => 'pages#home'
-  match '/home', :to => 'pages#home'
-  match '/explore', :to => 'pages#explore'
-#  match '/user', :to => 'users#show' # Adding show action to User
-#  match '/upload', :to => 'fabrics#upload'
-  match '/get-upload-info', :to => 'users#upload'
+  get '/home', :to => 'pages#home'
+  get '/explore', :to => 'pages#explore'
+#  get '/user', :to => 'users#show' # Adding show action to User
+#  get '/upload', :to => 'fabrics#upload'
+  get '/get-upload-info', :to => 'users#upload'
  
   
   # The priority is based upon order of creation:

@@ -8,9 +8,6 @@ class User < ActiveRecord::Base
   #:confirmable
   devise :database_authenticatable, :registerable, :recoverable, 
          :rememberable, :trackable, :validatable
-
-  attr_accessible :email, :password, :password_confirmation, :role, :username,
-                  :detail_attributes
   
   validates_presence_of  :email  # password is automatically validated by devise
   validates_uniqueness_of :username, :email, :case_sensitive => false

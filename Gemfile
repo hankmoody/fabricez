@@ -1,43 +1,21 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2'
-
-# Bundle edge Rails instead:
-# gem 'rails',     :git => 'git://github.com/rails/rails.git'
-
+gem 'rails', '4.0.3'
 gem 'pg'
-#gem "rake", "0.8.7"
 gem 'devise'
-gem 'paperclip' , :path => "vendor/gems/paperclip"
+gem 'paperclip'
 gem 'kaminari'
 gem 'aws-sdk'
 gem "simple_form"
 #gem 'client_side_validations'
 gem 'bootstrap-sass'
-#gem 'sprockets', '>= 2.10.1'
 
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails', "~> 3.2.3"
-  gem 'coffee-rails', '~> 3.2.1'
-  gem 'uglifier', '>= 1.0.3'
-  gem 'jquery-fileupload-rails'
-end
+gem 'sass-rails'
+gem 'coffee-rails'
+gem 'uglifier'
+gem 'jquery-fileupload-rails'
 
 gem 'jquery-rails'
-
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# Use unicorn as the web server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
 
 gem "rspec-rails", :group => [:test, :development]
 gem 'debugger', :group => [:development, :test]
@@ -49,6 +27,5 @@ group :test do
   gem "capybara"
   gem "guard-rspec"  
   gem "spork", "> 0.9.0.rc"
-  # gem "guard-spork"
   gem "win32console"
 end

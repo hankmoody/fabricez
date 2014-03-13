@@ -45,6 +45,11 @@ class CollectionsController < ApplicationController
     @collection = Collection.find(params[:id])
     render :action => "ezalbum", :layout => "noheader"
   end
-  
+
+private
+
+  def collection_params
+    params.require(:collection).permit(:name, :user, :fabrics)
+  end
     
 end
