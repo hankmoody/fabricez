@@ -24,8 +24,9 @@ group :test do
   # Pretty printed test output
   gem 'turn', :require => false
   gem 'factory_girl_rails'
-  gem "capybara"
-  gem "guard-rspec"  
-  gem "spork", "> 0.9.0.rc"
+  gem 'capybara'
+  gem 'guard-rspec'
+  gem 'sqlite3'
+  # gem "spork", "> 0.9.0.rc"
   gem "win32console"
 end
