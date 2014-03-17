@@ -12,10 +12,15 @@ body {
   padding-top: 70px;
 }
 
-.form-signin {
+.form-signin, .form-sigup, .form-reset-password {
   max-width: 350px;
   padding: 20px;
   margin: 0 auto;
   border: 1px solid #cccccc;
   border-radius: 10px;
+}
+
+.form-reset-password
+{
+  max-width: 400px;
 }
