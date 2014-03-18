@@ -1,13 +1,13 @@
 <div class="form-reset-password">
-<h2>Forgot your password?</h2>
-<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }, class: 'form-inline', role: 'form') do |f| %>
-  <%= devise_error_messages! %>
-  <div class="form-group">
-    <%= f.label(:email, class: 'sr-only') %>
-    <%= f.email_field(:email, class: 'form-control', placeholder: 'Your Registered Email') %>
-  </div>
-  <%= f.submit("Send me New Password Instructions", class: 'btn btn-primary btn-lg btn-block') %>
-<% end %>
-<br />
-<%= render :partial => "devise/shared/links" %>
+  <h2>Forgot your password?</h2>
+  <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }, class: 'form-inline', role: 'form') do |f| %>
+    <%= devise_error_messages! %>
+    <div class="form-group">
+      <%= f.label(:email, class: 'sr-only') %>
+      <%= f.email_field(:email, class: 'form-control', placeholder: 'Email Address') %>
+    </div>
+    <%= f.submit("Send password reset instructions", class: 'btn btn-primary btn-lg btn-block') %>
+  <% end %>
+  <br />
+  <%= render :partial => "devise/shared/links" %>
 </div>
