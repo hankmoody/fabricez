@@ -4,7 +4,7 @@
     <%= devise_error_messages! %>
     <div class="form-group">
       <%= f.label(:email, class: 'sr-only') %>
-      <%= f.email_field(:email, class: 'form-control', placeholder: 'Email Address') %>
+      <%= f.email_field(:email, class: 'form-control input-lg', placeholder: 'Email Address') %>
     </div>
     <%= f.submit("Send password reset instructions", class: 'btn btn-primary btn-lg btn-block') %>
   <% end %>
