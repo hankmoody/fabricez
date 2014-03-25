@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
   
   # Callbacks
-  before_save :attach_default_role
-  before_create :set_default_values, :attach_default_collection
+  #before_save :attach_default_role
+  #before_create :set_default_values, :attach_default_collection
   before_destroy :destroy_all_fabrics
 
   #:confirmable
