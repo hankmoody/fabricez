@@ -1,7 +1,7 @@
 <%
 =begin
     Locals
-	 - enable_select 
+   - enable_select 
 =end
 %>
 
@@ -9,155 +9,163 @@
 <% display_fabric_list = (fabric_view == "list") ? "display:block" : "display:none;" %>
 <% display_fabric_grid = (fabric_view == "grid") ? "display:block" : "display:none;" %>
 
-<div id="fabric_selection_bar">
-	<div class="bar_select_checkbox">
-		<input type="checkbox" name="select_all" title="Select/UnSelect All"/>
-	</div>
-
-	<div class="bar_select_view">
-		<% sel_list_class = sel_grid_class = "" %>
-		<% params[:view] == "list" ? sel_list_class = "selected_view" : sel_grid_class = "selected_view"%>
-		<ul>
-			<li><%= link_to "Grid View", url_for(params.merge(:view => "grid")), :class => sel_grid_class %></li>
-			<li>|</li>
-			<li><%= link_to "List View", url_for(params.merge(:view => "list")), :class => sel_list_class %></li>
-		</ul>
-	</div>
-	<div id="view_number">
-		<label id="select_view_no">View</label>
-		<select id="select_view_no">
-			<option value="<%= url_for(params.merge(:pagesize => 9))%>"  <%= "selected" if @pagesize.eql?(9)%> >10</option>
-			<option value="<%= url_for(params.merge(:pagesize => 54))%>" <%= "selected" if @pagesize.eql?(54)%> >50</option>
-			<option value="<%= url_for(params.merge(:pagesize => 99))%>" <%= "selected" if @pagesize.eql?(99)%> >100</option>
-		</select>
-	</div>		
+<div class="row">
+  <div class="col-xs-5">
+    <label class="checkbox-inline">
+      <input type="checkbox" name="select_all"> Select All
+    </label>
+  </div>
+  <!-- number of designs per page -->
+  <div class="col-xs-3">
+    <form class="form-inline" role="form">
+      <div class="form-group">
+        <label>View</label>
+        <select class="form-control">
+          <option value="<%= url_for(params.merge(:pagesize => 9))%>"  <%= "selected" if @pagesize.eql?(9)%> >10</option>
+          <option value="<%= url_for(params.merge(:pagesize => 54))%>" <%= "selected" if @pagesize.eql?(54)%> >50</option>
+          <option value="<%= url_for(params.merge(:pagesize => 99))%>" <%= "selected" if @pagesize.eql?(99)%> >100</option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <!-- change view -->
+  <div class="col-xs-4">
+    <div class="pull-right">
+      <% sel_list_class = sel_grid_class = "" %>
+      <% params[:view] == "list" ? sel_list_class = "selected_view" : sel_grid_class = "selected_view"%>
+      <%= link_to "Grid View", url_for(params.merge(:view => "grid")), :class => sel_grid_class %> | <%= link_to "List View", url_for(params.merge(:view => "list")), :class => sel_list_class %>
+    </div>
+  </div>
 </div>
-
+<!-- fabric container -->
+<div class="row">
 <% if !@fabrics.empty? %>
 <% fabric_count = 1 %>
 <div id="fabric_folder">
+  <div id="fabric_selection_list" style="<%=display_fabric_list%>">
+    <% @fabrics.each do |fabric| %>
+      <div class="fabric_cell">
+        <% if enable_select %>
+          <div class="fabric_checkbox">
+            <input type="checkbox" name="selected_fab[]" value="<%=fabric.id%>"/>
+          </div>
+        <% end %>
+        <div class="fabric_cell_graphic">
+          <%= link_to image_tag(fabric.attachment.url(:thumb), :width => 150), fabric_path(fabric.id) %>
+        </div>
+        <div class="fabric_cell_info">
+          <div class="fabric_cell_code"><%= fabric.code %></div>
+          <ul>
+            <%= fabric.yarn_count.full_count unless fabric.yarn_count.nil? %>
+            <%= fabric.reed_pick.full_reed_pick unless fabric.reed_pick.nil? %>
+            <% if (fabric.quantity && fabric.quantity > 0) %><li><%= format_qty fabric.quantity %> mts</li> <% end %>
+            <% if (fabric.width && fabric.width > 0) %> <li> <%= "#{fabric.width}\"" %> </li> <% end %>
+          </ul>
+        </div>
+        <div class="fabric_cell_tags">
+          <%= fabric.tag_list %>
+        </div>  
+        <div class="fabric_cell_action_links">
+          <ul class="design_info">
+            <% if (current_user && (current_user.owns_fabric?(fabric) || current_user.role.category == "admin")) %>
+              <li class="design_card_icon design_del_link"> <%= link_to "", fabric_path(fabric.id, :redirect_to => portfolio_fabrics_path(:display => params[:display])), 
+                                            :confirm => "Are you sure?", 
+                                            :method => :delete,
+                                            :title => "Delete"  %></li>
+              <li class="design_card_icon design_edit_link"><%= link_to "", edit_fabric_path(fabric.id),
+                                 :title => "Edit" %> </li>
+            <% end %>
+            <% if current_user && current_user.role.category == "admin" %>
+              <li><%= link_to "", publish_fabric_path(:id => fabric.id),
+                                 :title => "Publish" %> </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    <% end %>
+  </div>
 
-	<div id="fabric_selection_list" style="<%=display_fabric_list%>">
-		<% @fabrics.each do |fabric| %>
-			<div class="fabric_cell">
-				<% if enable_select %>
-					<div class="fabric_checkbox">
-						<input type="checkbox" name="selected_fab[]" value="<%=fabric.id%>"/>
-					</div>
-				<% end %>
-				<div class="fabric_cell_graphic">
-					<%= link_to image_tag(fabric.attachment.url(:thumb), :width => 150), fabric_path(fabric.id) %>
-				</div>
-				<div class="fabric_cell_info">
-					<div class="fabric_cell_code"><%= fabric.code %></div>
-					<ul>
-						<%= fabric.yarn_count.full_count unless fabric.yarn_count.nil? %>
-						<%= fabric.reed_pick.full_reed_pick unless fabric.reed_pick.nil? %>
-						<% if (fabric.quantity && fabric.quantity > 0) %><li><%= format_qty fabric.quantity %> mts</li> <% end %>
-						<% if (fabric.width && fabric.width > 0) %> <li> <%= "#{fabric.width}\"" %> </li> <% end %>
-					</ul>
-				</div>
-				<div class="fabric_cell_tags">
-					<%= fabric.tag_list %>
-				</div>	
-				<div class="fabric_cell_action_links">
-					<ul class="design_info">
-						<% if (current_user && (current_user.owns_fabric?(fabric) || current_user.role.category == "admin")) %>
-							<li class="design_card_icon design_del_link"> <%= link_to "", fabric_path(fabric.id, :redirect_to => portfolio_fabrics_path(:display => params[:display])), 
-																						:confirm => "Are you sure?", 
-																						:method => :delete,
-																						:title => "Delete"  %></li>
-							<li class="design_card_icon design_edit_link"><%= link_to "", edit_fabric_path(fabric.id),
-																 :title => "Edit" %> </li>
-						<% end %>
-				 		<% if current_user && current_user.role.category == "admin" %>
-							<li><%= link_to "", publish_fabric_path(:id => fabric.id),
-																 :title => "Publish" %> </li>
-				 		<% end %>
-				 	</ul>
-				</div>
-			</div>
-		<% end %>
-	</div>
-
-		
-	<div id="fabric_selection_page" class="fabric_selection" style="<%=display_fabric_grid%>">
-		<ul id="fabric_selection_page_ul" class="design_area">
-			<% @fabrics.each do |fabric| %>
-				<% (fabric_count%3 == 0) ? class_value = "last" : class_value = ""  %>
-					<li id="design1" class='<%= class_value %>'>
-					<div class="card_shadow">
-						<div class="design_card">
-							<div class="image_holder">
-								<%= link_to image_tag(fabric.attachment.url(:thumb)), fabric_path(fabric.id) %>
-								<ul class="design_info">
-									<li><%= fabric.code %></li>
-									<% if (fabric.quantity && fabric.quantity > 0) %>
-										<li class="design_quantity"><%= format_qty fabric.quantity %> mts</li>
-									<% end %>
-									<% if (current_user && (current_user.owns_fabric?(fabric) || current_user.role.category == "admin")) %>
-										<% class_left_link = "design_left_link" %>
-										<% if enable_select %>
-											<li class="design_card_icon <%=class_left_link%>"><input type="checkbox" name="selected_fab" value="<%=fabric.id%>"/></li>
-											<% class_left_link = ""%>
-										<% end %>
-										<li class="design_card_icon design_del_link <%=class_left_link%>"><%= link_to "", 
-																									fabric_path(fabric.id, :redirect_to => portfolio_fabrics_path(:display => params[:display])), 
-																									:confirm => "Are you sure?", 
-																									:method => :delete,
-																									:title => "Delete"  %></li>
-										<li class="design_card_icon design_edit_link"><%= link_to "",
-																			 edit_fabric_path(fabric.id),
-																			 :title => "Edit" %> </li>
-									<% end %>
-								 	<% if current_user && current_user.role.category == "admin" %>
-										<li class="design_card_icon design_check_link"><%= link_to "",
-																			 publish_fabric_path(:id => fabric.id),
-																			 :title => "Publish" %> </li>
-								 	<% end %>									
-								</ul>
-							</div>
-						</div>
-					</div>
-				</li>
-				<% fabric_count += 1 %>
-			<% end %>			
-		</ul>
-	</div>
+    
+  <div id="fabric_selection_page" class="fabric_selection" style="<%=display_fabric_grid%>">
+    <ul id="fabric_selection_page_ul" class="design_area">
+      <% @fabrics.each do |fabric| %>
+        <% (fabric_count%3 == 0) ? class_value = "last" : class_value = ""  %>
+          <li id="design1" class='<%= class_value %>'>
+          <div class="card_shadow">
+            <div class="design_card">
+              <div class="image_holder">
+                <%= link_to image_tag(fabric.attachment.url(:thumb)), fabric_path(fabric.id) %>
+                <ul class="design_info">
+                  <li><%= fabric.code %></li>
+                  <% if (fabric.quantity && fabric.quantity > 0) %>
+                    <li class="design_quantity"><%= format_qty fabric.quantity %> mts</li>
+                  <% end %>
+                  <% if (current_user && (current_user.owns_fabric?(fabric) || current_user.role.category == "admin")) %>
+                    <% class_left_link = "design_left_link" %>
+                    <% if enable_select %>
+                      <li class="design_card_icon <%=class_left_link%>"><input type="checkbox" name="selected_fab" value="<%=fabric.id%>"/></li>
+                      <% class_left_link = ""%>
+                    <% end %>
+                    <li class="design_card_icon design_del_link <%=class_left_link%>"><%= link_to "", 
+                                                  fabric_path(fabric.id, :redirect_to => portfolio_fabrics_path(:display => params[:display])), 
+                                                  :confirm => "Are you sure?", 
+                                                  :method => :delete,
+                                                  :title => "Delete"  %></li>
+                    <li class="design_card_icon design_edit_link"><%= link_to "",
+                                       edit_fabric_path(fabric.id),
+                                       :title => "Edit" %> </li>
+                  <% end %>
+                  <% if current_user && current_user.role.category == "admin" %>
+                    <li class="design_card_icon design_check_link"><%= link_to "",
+                                       publish_fabric_path(:id => fabric.id),
+                                       :title => "Publish" %> </li>
+                  <% end %>                 
+                </ul>
+              </div>
+            </div>
+          </div>
+        </li>
+        <% fabric_count += 1 %>
+      <% end %>     
+    </ul>
+  </div>
 </div>
 <!-- For some reason remote = true (AJAX) is not working. Set it to false for now.
-	 TODO: Fix AJAX in pagination -->
+   TODO: Fix AJAX in pagination -->
 <%= paginate @fabrics, :remote => false %>
 <% else %>
-	No fabrics found.
+  <div class="container">
+    No fabrics found.
+  </div>
 <% end %>
+</div> <!-- fabric container end -->
 
 <script type="text/javascript" charset="utf-8">
 
-	// Make sure the checkbox is unselected on page load.
-	$("input:checkbox").prop("checked", false);
+  // Make sure the checkbox is unselected on page load.
+  $("input:checkbox").prop("checked", false);
 
-	$(function() {
-		$("DIV.bar_select_checkbox input:checkbox").click(function() {
-			
-			// Find which view is displayed
-			var viewType;
-			if ($("DIV#fabric_selection_list").css("display") == "block")
-				viewType = "DIV#fabric_selection_list";
-			else if ($("DIV#fabric_selection_page").css("display") == "block")
-				viewType = "DIV#fabric_selection_page";
-			
-			//alert($("DIV#fabric_folder").find('input:checkbox').length);
-			if ($(this).prop("checked") == true)
-				$(viewType).find("input:checkbox").prop("checked", true);
-			else
-				$(viewType).find("input:checkbox").prop("checked", false);
-		});
-		
-		$("SELECT#select_view_no").change(function() {
-			window.location = $(this).find("option:selected").val();
-		});
-	
-	});
+  $(function() {
+    $("DIV.bar_select_checkbox input:checkbox").click(function() {
+      
+      // Find which view is displayed
+      var viewType;
+      if ($("DIV#fabric_selection_list").css("display") == "block")
+        viewType = "DIV#fabric_selection_list";
+      else if ($("DIV#fabric_selection_page").css("display") == "block")
+        viewType = "DIV#fabric_selection_page";
+      
+      //alert($("DIV#fabric_folder").find('input:checkbox').length);
+      if ($(this).prop("checked") == true)
+        $(viewType).find("input:checkbox").prop("checked", true);
+      else
+        $(viewType).find("input:checkbox").prop("checked", false);
+    });
+    
+    $("SELECT#select_view_no").change(function() {
+      window.location = $(this).find("option:selected").val();
+    });
+  
+  });
 </script>
 

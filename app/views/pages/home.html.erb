@@ -1,13 +1,9 @@
-
-<div class="span-18">
-<%= render :partial => 'layouts/fabricalbum', :locals => { :enable_select => false } %>
-
+<div class="col-xs-10">
+  <%= render :partial => 'layouts/fabricalbum', :locals => { :enable_select => false } %>
 </div>
-
-<div class="span-6 last">
+<div class="col-xs-2">
 	<%= render :partial => 'layouts/filterblock', :locals => { :filter_type => 'Colors' } %>
 	<%= render :partial => 'layouts/filterblock', :locals => { :filter_type=> 'show_tags', :tag_type => 'all' } %>
 	<%= render :partial => 'layouts/filterblock', :locals => { :filter_type => 'Width' } %>
 	<%= render :partial => 'layouts/filterblock', :locals => { :filter_type => 'Count' } %>	
 </div>
-
