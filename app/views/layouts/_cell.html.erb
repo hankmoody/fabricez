@@ -1,0 +1,38 @@
+<div class="fabric_cell">
+  <% if enable_select %>
+    <div class="fabric_checkbox">
+      <input type="checkbox" name="selected_fab[]" value="<%=fabric.id%>"/>
+    </div>
+  <% end %>
+  <div class="fabric_cell_graphic">
+    <%= link_to image_tag(fabric.attachment.url(:thumb), :width => 150), fabric_path(fabric.id) %>
+  </div>
+  <div class="fabric_cell_info">
+    <div class="fabric_cell_code"><%= fabric.code %></div>
+    <ul>
+      <%= fabric.yarn_count.full_count unless fabric.yarn_count.nil? %>
+      <%= fabric.reed_pick.full_reed_pick unless fabric.reed_pick.nil? %>
+      <% if (fabric.quantity && fabric.quantity > 0) %><li><%= format_qty fabric.quantity %> mts</li> <% end %>
+      <% if (fabric.width && fabric.width > 0) %> <li> <%= "#{fabric.width}\"" %> </li> <% end %>
+    </ul>
+  </div>
+  <div class="fabric_cell_tags">
+    <%= fabric.tag_list %>
+  </div>  
+  <div class="fabric_cell_action_links">
+    <ul class="design_info">
+      <% if (current_user && (current_user.owns_fabric?(fabric) || current_user.role.category == "admin")) %>
+        <li class="design_card_icon design_del_link"> <%= link_to "", fabric_path(fabric.id, :redirect_to => portfolio_fabrics_path(:display => params[:display])), 
+                                      :confirm => "Are you sure?", 
+                                      :method => :delete,
+                                      :title => "Delete"  %></li>
+        <li class="design_card_icon design_edit_link"><%= link_to "", edit_fabric_path(fabric.id),
+                           :title => "Edit" %> </li>
+      <% end %>
+      <% if current_user && current_user.role.category == "admin" %>
+        <li><%= link_to "", publish_fabric_path(:id => fabric.id),
+                           :title => "Publish" %> </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

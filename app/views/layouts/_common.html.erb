@@ -1,27 +1,20 @@
-<%
-=begin
-Locals
-	- show_header
-=end
-%>
-
 <!DOCTYPE html>
 <html>
-<head>
-<title><%= @title %></title>
-  <%= csrf_meta_tags %>  
-  <%= stylesheet_link_tag 'application' %>
-  <%= javascript_include_tag 'application' %>  
-  <%= yield(:head) %>  
-</head>
-<body class='<%= controller_name %> <%= action_name %>'>
-	<%= render 'layouts/header'%>
-  <div id="main" role="main">
-    <div class="container">
-		  <%= yield %>
+  <head>
+    <title>
+      <%= @title %>
+    </title>
+    <%= csrf_meta_tags %>  
+    <%= stylesheet_link_tag 'application' %>
+    <%= javascript_include_tag 'application' %>  
+    <%= yield(:head) %>  
+  </head>
+  <body class='<%= controller_name %> <%= action_name %>'>
+    <%= render 'layouts/header'%>
+    <div class="container" role="main">
+      <%= yield %>
     </div>
     <footer>
-    </footer>  
-  </div>
-</body>
+    </footer>
+  </body>
 </html>
