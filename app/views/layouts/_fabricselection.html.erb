@@ -1,0 +1,28 @@
+<div class="row">
+  <div class="col-xs-5">
+    <label class="checkbox-inline">
+      <input type="checkbox" name="select_all"> Select All
+    </label>
+  </div>
+  <!-- number of designs per page -->
+  <div class="col-xs-3">
+    <form class="form-inline" role="form">
+      <div class="form-group">
+        <label>View</label>
+        <select class="form-control">
+          <option value="<%= url_for(params.merge(:pagesize => 9))%>"  <%= "selected" if @pagesize.eql?(9)%> >10</option>
+          <option value="<%= url_for(params.merge(:pagesize => 54))%>" <%= "selected" if @pagesize.eql?(54)%> >50</option>
+          <option value="<%= url_for(params.merge(:pagesize => 99))%>" <%= "selected" if @pagesize.eql?(99)%> >100</option>
+        </select>
+      </div>
+    </form>
+  </div>
+  <!-- change view -->
+  <div class="col-xs-4">
+    <div class="pull-right">
+      <% sel_list_class = sel_grid_class = "" %>
+      <% params[:view] == "list" ? sel_list_class = "selected_view" : sel_grid_class = "selected_view"%>
+      <%= link_to "Grid View", url_for(params.merge(:view => "grid")), :class => sel_grid_class %> | <%= link_to "List View", url_for(params.merge(:view => "list")), :class => sel_list_class %>
+    </div>
+  </div>
+</div>
