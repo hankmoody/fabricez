@@ -1,11 +1,34 @@
 <div class="row">
-  <div class="col-xs-5">
-    <label class="checkbox-inline">
-      <input type="checkbox" name="select_all"> Select All
-    </label>
+  <div class="col-xs-8">
+    <ul class="nav nav-pills">
+      <li class="active">
+        <a href="#">
+          Stripes
+          <span class="glyphicon glyphicon-remove"></span>
+        </a>
+      </li>
+      <li class="active">
+        <a href="#">
+          Blue
+          <span class="glyphicon glyphicon-remove"></span>
+        </a>
+      </li>
+      <li class="active">
+        <a href="#">
+          Black
+          <span class="glyphicon glyphicon-remove"></span>
+        </a>
+      </li>
+      <li class="active">
+        <a href="#">
+          58"
+          <span class="glyphicon glyphicon-remove"></span>
+        </a>
+      </li>
+    </ul>
   </div>
-  <!-- number of designs per page -->
-  <div class="col-xs-3">
+  <div class="col-xs-2">
+    <div class="pull-right">
     <form class="form-inline" role="form">
       <div class="form-group">
         <label>View</label>
@@ -16,10 +39,11 @@
         </select>
       </div>
     </form>
+    </div>
   </div>
   <!-- change view -->
-  <div class="col-xs-4">
-    <div class="pull-right">
+  <div class="col-xs-2">
+    <div class="pull-right view-style">
       <% sel_list_class = sel_grid_class = "" %>
       <% params[:view] == "list" ? sel_list_class = "selected_view" : sel_grid_class = "selected_view"%>
       <%= link_to "Grid View", url_for(params.merge(:view => "grid")), :class => sel_grid_class %> | <%= link_to "List View", url_for(params.merge(:view => "list")), :class => sel_list_class %>

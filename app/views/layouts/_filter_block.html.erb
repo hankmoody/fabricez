@@ -1,0 +1,131 @@
+<% if filter_type == 'Quantity'%>
+  <div class="filter-container-first">
+    <h4>Quantity</h4>
+    <p>
+      <label for="quantity" class="sr-only">Quantity:</label>
+      <input type="text" id="quantity" style="border: 0px;">
+    </p>
+    <div id="slider-range"></div>
+    <script>
+    $(function() {
+      $( "#slider-range" ).slider({
+        range: true,
+        min: 0,
+        max: 2000,
+        step: 100,
+        animate: true,
+        values: [ 100, 500 ],
+        scale: ['500', '1000', '1500', '2000'],
+        dimension: 'mtr',
+        slide: function( event, ui ) {
+          $( "#quantity" ).val( ui.values[ 0 ] + " mtr - "  + ui.values[ 1 ] +  " mtr");
+        }
+      });
+      $( "#quantity" ).val( $( "#slider-range" ).slider( "values", 0 ) + " mtr - "  
+        + $( "#slider-range" ).slider( "values", 1 ) + " mtr"  );
+    });
+    </script>
+  </div>
+<% end %>
+
+<% if filter_type == 'show_tags' %>
+  <div class="filter-container">
+    <h4>Tags</h4>
+    <ul class="nav nav-pills nav-stacked">
+        <li class="active">
+          <a href="#">
+            Stripes
+            <span class="badge pull-right">10</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            Checks
+            <span class="badge pull-right">45</span>
+          </a>
+        </li>
+        <li >
+          <a href="#">
+            Dobby
+            <span class="badge pull-right">12</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            Lurax
+            <span class="badge pull-right">29</span>
+          </a>
+        </li>
+      </ul>
+  </div>
+<% end %>
+
+<% if filter_type == 'Width' %>
+  <div class="filter-container">
+    <h4>Width</h4>
+    <ul class="nav nav-pills nav-stacked">
+        <li>
+          <a href="#">
+            48"
+            <span class="badge pull-right">51</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            50"
+            <span class="badge pull-right">32</span>
+          </a>
+        </li>
+        <li class="active">
+          <a href="#">
+            58"
+            <span class="badge pull-right">75</span>
+          </a>
+        </li>
+        <li>
+          <a href="#">
+            68"
+            <span class="badge pull-right">2</span>
+          </a>
+        </li>
+      </ul>
+  </div>
+<% end %>
+
+<% if filter_type == 'Count' %>
+  <div class="filter-container">
+    <h4>Count</h4>
+  </div>
+<% end %>
+
+<% if filter_type == 'Colors' %>
+  <div class="filter-container">
+    <h4>Colors</h4>
+      <ul class="nav nav-pills nav-stacked">
+      <li class="active">
+        <a href="#">
+          Blue
+          <span class="badge pull-right">23</span>
+        </a>
+      </li>
+      <li class="active">
+        <a href="#">
+          Black
+          <span class="badge pull-right">14</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          Red
+          <span class="badge pull-right">51</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          Green
+          <span class="badge pull-right">31</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+<% end %>
