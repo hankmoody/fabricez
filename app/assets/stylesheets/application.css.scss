@@ -20,17 +20,94 @@ body {
   border-radius: 10px;
 }
 
-.form-reset-password
-{
+.form-reset-password {
   max-width: 400px;
 }
 
-div.thumbnail 
-{ 
+div.thumbnail { 
   padding: 10px; 
 }
 
-.card-info
-{
+.card-info {
   margin: 5px 0;
+}
+
+ul.fabric_color_palette {
+  list-style: none;
+}
+
+.fabric-view {
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.view-style {
+  padding: 7px 0px;
+}
+
+.filter-container {
+  margin-top: 20px;
+}
+
+.filter-container, .filter-container-first {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding-bottom: 10px;
+}
+
+
+.filter-container h4, .filter-container-first h4 {
+  padding: 12px 0px;
+  text-transform: uppercase;
+  color: #615e5e;
+  font-size: 15px;
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+  margin-top: 0px;
+}
+
+#quantity {
+  text-align: center;
+  width: 100%;
+}
+
+#slider-range {
+  width: 90%;
+  margin: 0px 8px;
+}
+
+.filter-btn {
+  width: 100%;
+  margin-bottom: 1px;
+  border: none;
+  border-radius: 0px;
+  margin-left: 0px!important;
+  color: #428bca;
+  background: white;
+  text-align: left;
+}
+
+.filter-btn input[type="checkbox"] {
+  display: inline!important;
+}
+
+.filter-btn:hover {
+background: #eee;
+color: #428bcd;
+}
+
+.filter-btn.active:hover {
+background: #428bcd;
+color: white;
+box-shadow: none;
+}
+
+.filter-btn.active .badge {
+background: white;
+color: #428bca;
+}
+
+.filter-btn .badge {
+background: grey;
+color: white;
 }

@@ -1,9 +1,22 @@
-<div class="col-xs-10">
-  <%= render :partial => 'layouts/fabricalbum', :locals => { :enable_select => false } %>
+<div class="row">
+  <div class="col-xs-2">
+    <!-- <div class="filter-head">
+      <h3>Filter</h3>
+    </div> -->
+  </div>
+  <div class="col-xs-10 fabric-view">
+    <%= render 'layouts/fabric_selection'%>
+  </div>
 </div>
-<div class="col-xs-2">
-	<%= render :partial => 'layouts/filterblock', :locals => { :filter_type => 'Colors' } %>
-	<%= render :partial => 'layouts/filterblock', :locals => { :filter_type=> 'show_tags', :tag_type => 'all' } %>
-	<%= render :partial => 'layouts/filterblock', :locals => { :filter_type => 'Width' } %>
-	<%= render :partial => 'layouts/filterblock', :locals => { :filter_type => 'Count' } %>	
+<div class="row">
+  <div class="col-xs-2">
+    <%= render :partial => 'layouts/filter_block', :locals => { :filter_type => 'Quantity'} %>
+    <%= render :partial => 'layouts/filter_block', :locals => { :filter_type => 'show_tags', :tag_type => 'all' } %>
+    <%= render :partial => 'layouts/filter_block', :locals => { :filter_type => 'Colors' } %>
+    <%= render :partial => 'layouts/filter_block', :locals => { :filter_type => 'Width' } %>
+    <%= render :partial => 'layouts/filter_block', :locals => { :filter_type => 'Count' } %>  
+  </div>
+  <div class="col-xs-10">
+    <%= render :partial => 'layouts/fabric_album', :locals => { :enable_select => false } %>
+  </div>
 </div>

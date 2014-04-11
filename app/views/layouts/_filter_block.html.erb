@@ -1,0 +1,95 @@
+<% if filter_type == 'Quantity'%>
+  <div class="filter-container-first">
+    <h4>Min. Quantity</h4>
+    <p>
+      <label for="quantity" class="sr-only">Minimum Quantity:</label>
+      <input type="text" id="quantity" style="border: 0px;">
+    </p>
+    <div id="slider-range"></div>
+    <script>
+    $(function() {
+      $( "#slider-range" ).slider({
+        range: "max",
+        min: 0,
+        max: 2000,
+        step: 100,
+        animate: true,
+        value: 100,
+        scale: ['500', '1000', '1500', '2000'],
+        dimension: 'mtr',
+        slide: function( event, ui ) {
+          $( "#quantity" ).val( ui.value + " mtr" );
+        }
+      });
+      $( "#quantity" ).val( $( "#slider-range" ).slider( "value" ) + " mtr"  
+       );
+    });
+    </script>
+  </div>
+<% end %>
+
+<% if filter_type == 'show_tags' %>
+  <div class="filter-container">
+    <h4>Tags</h4>
+    <div class="btn-group" data-toggle="buttons">
+      <label class="btn btn-primary filter-btn active">
+        <input type="checkbox"> Stripes
+        <span class="badge pull-right">10</span>
+      </label>
+      <label class="btn btn-primary filter-btn">
+        <input type="checkbox"> Checks
+        <span class="badge pull-right">24</span>
+      </label>
+      <label class="btn btn-primary filter-btn">
+        <input type="checkbox"> Dobby
+        <span class="badge pull-right">17</span>
+      </label>
+    </div>
+  </div>
+<% end %>
+
+<% if filter_type == 'Width' %>
+  <div class="filter-container">
+    <h4>Width</h4>
+    <div class="btn-group" data-toggle="buttons">
+      <label class="btn btn-primary filter-btn">
+        <input type="checkbox"> 48"
+        <span class="badge pull-right">10</span>
+      </label>
+      <label class="btn btn-primary filter-btn">
+        <input type="checkbox"> 56"
+        <span class="badge pull-right">24</span>
+      </label>
+      <label class="btn btn-primary filter-btn active">
+        <input type="checkbox" value="1"> 58"
+        <span class="badge pull-right">17</span>
+      </label>
+    </div>
+  </div>
+<% end %>
+
+<% if filter_type == 'Count' %>
+  <div class="filter-container">
+    <h4>Count</h4>
+  </div>
+<% end %>
+
+<% if filter_type == 'Colors' %>
+  <div class="filter-container">
+    <h4>Colors</h4>
+    <div class="btn-group" data-toggle="buttons">
+      <label class="btn btn-primary filter-btn active">
+        <input type="checkbox"> Blue"
+        <span class="badge pull-right">52</span>
+      </label>
+      <label class="btn btn-primary filter-btn active">
+        <input type="checkbox"> Black"
+        <span class="badge pull-right">21</span>
+      </label>
+      <label class="btn btn-primary filter-btn">
+        <input type="checkbox" value="1"> Green"
+        <span class="badge pull-right">43</span>
+      </label>
+    </div>
+  </div>
+<% end %>
