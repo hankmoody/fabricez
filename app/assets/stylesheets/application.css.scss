@@ -36,11 +36,6 @@ ul.fabric_color_palette {
   list-style: none;
 }
 
-.filter-head h3 {
-  margin: 0px;
-}
-
-
 .fabric-view {
   margin-bottom: 10px;
   border-radius: 5px;
@@ -71,10 +66,6 @@ ul.fabric_color_palette {
   margin-top: 0px;
 }
 
-.nav-pills > li > a {
-  border-radius: 0px;
-}
-
 #quantity {
   text-align: center;
   width: 100%;
@@ -83,4 +74,40 @@ ul.fabric_color_palette {
 #slider-range {
   width: 90%;
   margin: 0px 8px;
+}
+
+.filter-btn {
+  width: 100%;
+  margin-bottom: 1px;
+  border: none;
+  border-radius: 0px;
+  margin-left: 0px!important;
+  color: #428bca;
+  background: white;
+  text-align: left;
+}
+
+.filter-btn input[type="checkbox"] {
+  display: inline!important;
+}
+
+.filter-btn:hover {
+background: #eee;
+color: #428bcd;
+}
+
+.filter-btn.active:hover {
+background: #428bcd;
+color: white;
+box-shadow: none;
+}
+
+.filter-btn.active .badge {
+background: white;
+color: #428bca;
+}
+
+.filter-btn .badge {
+background: grey;
+color: white;
 }

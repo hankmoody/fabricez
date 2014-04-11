@@ -1,44 +1,36 @@
 <div class="row">
   <div class="col-xs-8">
-    <ul class="nav nav-pills">
-      <li class="active">
-        <a href="#">
-          Stripes
-          <span class="glyphicon glyphicon-remove"></span>
-        </a>
-      </li>
-      <li class="active">
-        <a href="#">
-          Blue
-          <span class="glyphicon glyphicon-remove"></span>
-        </a>
-      </li>
-      <li class="active">
-        <a href="#">
-          Black
-          <span class="glyphicon glyphicon-remove"></span>
-        </a>
-      </li>
-      <li class="active">
-        <a href="#">
-          58"
-          <span class="glyphicon glyphicon-remove"></span>
-        </a>
-      </li>
-    </ul>
+    <p>
+      <button type="button" class="btn btn-default btn-sm">
+        Stripes 
+        <span class="glyphicon glyphicon-remove"></span>
+      </button>
+      <button type="button" class="btn btn-default btn-sm">
+        Blue 
+        <span class="glyphicon glyphicon-remove"></span>
+      </button>
+      <button type="button" class="btn btn-default btn-sm">
+        Black 
+        <span class="glyphicon glyphicon-remove"></span>
+      </button>
+      <button type="button" class="btn btn-default btn-sm">
+        58" 
+        <span class="glyphicon glyphicon-remove"></span>
+      </button>
+    </p>
   </div>
   <div class="col-xs-2">
     <div class="pull-right">
-    <form class="form-inline" role="form">
-      <div class="form-group">
-        <label>View</label>
-        <select class="form-control">
-          <option value="<%= url_for(params.merge(:pagesize => 9))%>"  <%= "selected" if @pagesize.eql?(9)%> >10</option>
-          <option value="<%= url_for(params.merge(:pagesize => 54))%>" <%= "selected" if @pagesize.eql?(54)%> >50</option>
-          <option value="<%= url_for(params.merge(:pagesize => 99))%>" <%= "selected" if @pagesize.eql?(99)%> >100</option>
-        </select>
-      </div>
-    </form>
+      <form class="form-inline" role="form">
+        <div class="form-group">
+          <label>View</label>
+          <select class="form-control">
+            <option value="<%= url_for(params.merge(:pagesize => 9))%>"  <%= "selected" if @pagesize.eql?(9)%> >10</option>
+            <option value="<%= url_for(params.merge(:pagesize => 54))%>" <%= "selected" if @pagesize.eql?(54)%> >50</option>
+            <option value="<%= url_for(params.merge(:pagesize => 99))%>" <%= "selected" if @pagesize.eql?(99)%> >100</option>
+          </select>
+        </div>
+      </form>
     </div>
   </div>
   <!-- change view -->
