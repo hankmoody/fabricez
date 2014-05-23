@@ -17,7 +17,6 @@ class PagesController < ApplicationController
   def contact
   end
 
-  
   def userprofile
   end
 

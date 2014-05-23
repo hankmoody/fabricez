@@ -1,12 +1,17 @@
 class Fabric < ActiveRecord::Base
   include Rails.application.routes.url_helpers
   
+  has_many :fabric_tags, dependent: :destroy
+  has_many :tags, through: :fabric_tags, after_remove: :destroy_empty_tag
+  delegate :patterns, :weaves, :others, :best_fors, 
+           :seasons, :contents, :materials, to: :tags
+  
   has_and_belongs_to_many :collections
-  has_and_belongs_to_many :tags
   has_one :reed_pick, dependent: :destroy
   has_one :yarn_count, dependent: :destroy
   has_many :colors, dependent: :destroy
   
+
   accepts_nested_attributes_for :yarn_count, :reed_pick, :colors, :allow_destroy => true
   
   attr_accessor :cropping
@@ -41,19 +46,26 @@ class Fabric < ActiveRecord::Base
   validates_format_of :price, :with => /\A\d*\.?\d*\z/, :allow_blank => true
   
   # Virtual Attributes
-  ['pattern', 'other', 'contents', 'best_for', 'weave', 'season'].each do |name|
-    virt_attr_name = "#{name}_tag_list"
-    #attr_accessible virt_attr_name.to_sym
+  Tag.get_default_type_list.each do |type|
+    virtual_attr_name = "#{type.underscore}_tag_list"
 
-    define_method virt_attr_name do
-      tag_list(name)
+    define_method virtual_attr_name do
+      self.tags.where(type: type).pluck(:name).join(', ')
     end
     
-    define_method "#{virt_attr_name}=" do |tags_param|
-      set_tag_list(tags_param, name)
+    define_method "#{virtual_attr_name}=" do |names|
+      name_list = names.split(',').map { |n| n.strip }
+      new_tags = name_list.map {|n| Tag.find_or_create_by!(type: type, name: n) }
+      scoped_tags = self.tags.where(type: type)
+      self.tags.delete(scoped_tags - new_tags)
+      self.tags << new_tags - scoped_tags
     end
   end
-  
+
+  def destroy_empty_tag (tag)
+    tag.destroy_me
+  end
+
   def cropping?
     !cropping.nil? && cropping
   end
@@ -61,65 +73,6 @@ class Fabric < ActiveRecord::Base
   def attachment_geometry(style = :original)
     @geometry ||= {}
     @geometry[style] ||= Paperclip::Geometry.from_file(avatar.path(style))
-  end
-  
-  def remove_tag(r_tag)
-    r_tag.destroy if r_tag.tagtype == "other" || r_tag.tagtype == "contents"
-    tags.delete(r_tag)
-  end
-
-
-  def set_tag_list (tags_param, tag_type)
-    
-    if tags_param.empty?
-      removal_array = []  # Use this array to collects tags before deletion. DO NOT DELETE SINGLE ITEM IN A LOOP!
-      self.tags.each do |t|
-        removal_array << t if t.tagtype == tag_type
-      end
-      removal_array.each { |r| remove_tag r }              
-    end
-    
-    tag_array = []
-    tag_array = tags_param.split(",").collect{ |t| t.strip }.delete_if{ |t| t.blank? } if !tags_param.empty?
-    if (!tag_array.empty?)
-      tag_obj_array = Array.new
-      tag_array.each do |tag|
-        tag = tag.split('-').map{|t| t.titleize}.join('-')
-        #  ****  NOTE **** LIKE will have to changed to ILIKE for Postgres 
-        if Tag.where("name LIKE ?", tag).exists?
-          tag_obj_array << Tag.where("name LIKE ?", tag).first
-        else
-          tag_obj_array << Tag.create(name: tag, tagtype: tag_type)
-        end
-      end
-      
-      removal_array = []
-      self.tags.each do |tag|
-        if tag.tagtype == tag_type
-          removal_array << tag if !tag_obj_array.include?(tag)
-          # remove_tag tag if !tag_obj_array.include?(tag)
-        end  
-      end
-      removal_array.each { |r| remove_tag r } 
-      
-      tag_obj_array.each do |n_tag|
-        self.tags << n_tag unless self.tags.include?(n_tag)
-      end
-    end
-    puts "DEBUG: Pattern Tag List is #{self.pattern_tag_list}" if tag_type == "pattern"
-  end
-  
-  def tag_list (tag_type=nil)
-    tag_array = self.tag_names(tag_type)
-    tag_array.join(", ") unless tag_array.empty?
-  end
-  
-  def tag_names (tag_type=nil)
-    if tag_type.nil?
-      tags.collect{ |t| t.name }.flatten.compact
-    else
-      tags.collect{ |t| t.name if t.tagtype == tag_type }.flatten.compact
-    end
   end
   
   def to_jq_upload
@@ -153,21 +106,9 @@ class Fabric < ActiveRecord::Base
                                   coverage: color[:coverage])
     end    
   end
-  
-  def update_tags(tag_params)
-    tag_params.each do |t_params|
-      n_tags = t_params[:list].split(",").collect{ |t| t.strip }.delete_if{ |t| t.blank? }
-      e_tags = tag_names(t_params[:tag_type])
-      e_tags = ((t_params[:action] == 'remove') ? e_tags - n_tags : e_tags + n_tags).uniq
-      puts t_params.inspect
-      puts e_tags.inspect
-      set_tag_list(e_tags.join(", "), t_params[:tag_type])
-    end
-    save!
-  end
-  
+   
   class << self
-    
+
     def filter_fabrics(params, fab_array = nil)
       
       # Return all fabrics if none of the filters have been selected
@@ -208,29 +149,12 @@ class Fabric < ActiveRecord::Base
       return filtered_fabrics
       
     end
-    
-    def filter_by_tags(params)
-      # Tag search
-      #  - By default all tags from same type will be OR'd
-      #  - By default all tags from different type will be AND'ed
-      
-      result = [];
-      count = 0;
-      tag_type_list = Tag.get_tagtype_list
-      params.each_pair do |key, value|
-        if tag_type_list.include?(key)
-          if count == 0
-            # @fab_q = Collection.find(params['collection']).fabrics
-            result = @fab_q.joins(:tags).where('tags.name' => value)
-          else
-            result = result & @fab_q.joins(:tags).where('tags.name' => value)
-          end
-          count+=1
-        end
-      end
-      result
+       
+    def filter (params)
+      filter = FabricFilter.new (params)
+      filter.build_query
     end
-    
+
     def get_for_display_type (display_type = "published")
       # display_type = published : published = true, processed = true
       # display_type = unprocessed : published = false, processed = false
@@ -260,5 +184,132 @@ class Fabric < ActiveRecord::Base
     end
     
   end  
+
+
+private
   
+
+end
+
+
+class FabricFilter
+
+  def initialize (params)
+    @params = ParamsParser.new (params)
+  end
+
+  def build_query
+    return Fabric.scoped unless @params.found
+
+    initialize_queries
+    filter_for_reed_pick
+    filter_for_yarn_count
+    filter_for_width
+    filter_for_tags
+    combine_queries
+  end
+
+  private
+
+    def initialize_queries
+      @or_bucket = Array.new
+      @query_bucket = Array.new
+      @base_query = Fabric
+      use_collection_if_present
+    end
+
+    def combine_queries
+      if @query_bucket.empty?
+        @base_query
+      else
+        @query_bucket.reduce(:&) # This will run individual SQL query
+      end
+    end
+
+    def use_collection_if_present
+      @base_query = Collection.where(id: @params.collection_id).joins(:fabrics) unless @params.collection_id.nil?
+    end
+
+    def filter_for_reed_pick
+      p @params.reed_pick
+      # @base_query = @base_query
+      #                 .joins(:reed_pick)
+      #                 .where(reed_picks: @params.reed_pick) unless @params.reed_pick.empty?
+
+      query = @base_query.joins(:reed_pick)
+      @params.reed_pick.each { |rp| @query_bucket << query.where(reed_picks: rp).distinct }
+    end
+
+    def filter_for_yarn_count
+      @base_query = @base_query
+                      .joins(:yarn_count)
+                      .where(yarn_counts: @params.yarn_count) unless @params.yarn_count.empty?
+    end
+
+    def filter_for_width
+      @base_query = @base_query.where(width: @params.width) unless @params.width.nil?
+    end
+
+    def filter_for_tags
+      query = @base_query.joins(:tags) unless @params.tags.empty?
+      @params.tags.each { |type, names| @query_bucket << query.where(tags: {type: type, name: names}).distinct }
+    end
+
+end
+
+
+class ParamsParser
+  attr_reader :tags, :found, :collection_id, :reed_pick, :yarn_count, :width
+
+  def initialize (params)
+    @params = params
+    @found = false
+    parse_params
+  end
+
+  private
+
+    def parse_params
+      parse_collection
+      parse_reed_pick
+      parse_yarn_count
+      parse_width
+      parse_tags
+    end
+
+    def parse_collection
+      @collection_id = @params['collection']
+      @found |= ! @collection_id.nil?
+    end
+
+    def parse_reed_pick
+      list = list_from_comma_delimited(@params['reed_pick'])
+      @reed_pick = list.map { |rp| ReedPick.parse_string(rp) }
+      @found |= ! @reed_pick.empty?
+    end
+
+    def parse_yarn_count
+      @yarn_count = YarnCount.parse(@params['yarn_count'])
+      @found |= ! @yarn_count.empty?
+    end
+
+    def parse_width
+      @width = @params['width']
+      if ! @width.nil?
+        @width = @width.split(',').map {|s| s.strip.to_i }
+        @found = true
+      end
+    end
+
+    def parse_tags
+      @tags = {}
+      types = Tag.get_type_list
+      @params.each { |key, value| @tags = @tags.merge(key => value) if types.include?(key) }
+      @found |= ! @tags.empty?
+    end
+
+    def list_from_comma_delimited (str)
+      str.nil? ? [] : str.split(',').map { |s| s.strip }
+    end
+
 end

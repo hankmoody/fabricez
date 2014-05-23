@@ -26,7 +26,8 @@ group :test do
   gem 'factory_girl_rails'
   gem 'capybara'
   gem 'guard-rspec'
+  gem 'guard'
   gem 'sqlite3'
-  # gem "spork", "> 0.9.0.rc"
+  gem "spork-rails"
   gem "win32console"
 end

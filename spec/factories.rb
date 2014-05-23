@@ -1,59 +1,66 @@
-# require 'factory_girl'
+require 'factory_girl'
+require_relative 'tag_helpers'
 
-# Factory.define :role, :class => :role do |r|
-#     r.category "admin"
-#     r.limit 15
-# end
+$tag_types = [ "Pattern", "Other", "Content", "Season", "Weave" ]
 
+FactoryGirl.define do
 
-# Factory.define :tag do |t|
-#   t.name "Check"
-#   t.tagtype "pattern"
-# end
+  sequence :number do |n|
+    n
+  end
 
-# Factory.define :yarn_count do |yc|
-#     yc.warp_ply_count 2
-#     yc.weft_ply_count 2
-#     yc.warp_yarn_thickness 30
-#     yc.weft_yarn_thickness 40
-# end
+  sequence :name do |n|
+    "Coconut#{n}"
+  end
 
-# Factory.define :reed_pick do |rp|
-#     rp.reed 24
-#     rp.pick 32
-# end
+  $tag_types.each do |t|
+    factory t.underscore.to_sym, class: t do
+      name
+    end
+  end
 
-# Factory.define :color1, :class => :color do |c|
-#   c.red 230
-#   c.green 243
-#   c.blue 134
-# end
+  factory :best_for do
+    name
+  end
 
-# Factory.define :color2, :class => :color do |c|
-#   c.red 34
-#   c.green 198
-#   c.blue 76
-# end
+  factory :reed_pick_string, class: 'ReedPick' do
+    full_reed_pick '45/45'
+  end
 
-# Factory.define :fabric do |f|
-#   f.code "Code1234"
-#   f.width 44
-#   f.price 55.49
-#   f.quantity 100.30
-#   f.reed_pick {|rp| rp.association(:reed_pick)}
-#   f.yarn_count {|yc| yc.association(:yarn_count)}
-#   f.colors {|c| [c.association(:color1), c.association(:color2)]}
-# end
+  factory :reed_pick do
+    sequence(:reed) { |n| n }
+    sequence(:pick) { |n| n }
+  end
 
-# Factory.define :collection do |c|
-#   c.name "default"
-#   c.fabrics {|f| [f.association(:fabric)]}
-# end
+  factory :yarn_count_string, class: 'YarnCount' do
+    full_count '2/30s x 2/60s'
+  end
 
-# Factory.define :user do |u|
-#     u.username "foo"
-#     u.password "foobar1234"
-#     u.password_confirmation { |u| u.password }
-#     u.email "foo@test.com"
-#     u.collections {|c| [c.association(:collection)]}
-# end
+  factory :yarn_count do
+    sequence(:weft_ply_count) { |n| n }
+    sequence(:weft_yarn_thickness) { |n| n + 20 }
+    sequence(:warp_ply_count) { |n| n }
+    sequence(:warp_yarn_thickness) { |n| n + 20 }
+  end
+
+  factory :fabric do
+    sequence(:code) { |n| "Code#{n}" }
+    width 44
+    price 55.49
+    quantity 100.30
+
+    ignore do 
+      tag_code 'p-c-s_w-d'
+      reed_pick '24/32'
+      yarn_count '2/30s x 2/60s'
+    end
+
+    after(:create) do |fabric, evaluator|
+      create(:reed_pick_string, full_reed_pick: evaluator.reed_pick, fabric: fabric)
+      create(:yarn_count_string, full_count: evaluator.yarn_count, fabric: fabric)
+      tm = TagSpecHelpers::TestTagsMaker.new
+      tm.make_tags_and_associate(evaluator.tag_code, fabric)
+    end  
+  end
+
+end

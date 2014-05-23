@@ -35,5 +35,8 @@ Fabricez::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  config.s3_attachment_bucket = 'cnsfabricstest'
+  config.s3_host_alias = 'http://cnsfabricstest.s3-website-us-east-1.amazonaws.com/'  
   
 end

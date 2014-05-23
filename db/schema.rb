@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140313060855) do
+ActiveRecord::Schema.define(version: 20140329050748) do
 
   create_table "collections", force: true do |t|
     t.string   "name"
@@ -57,6 +57,13 @@ ActiveRecord::Schema.define(version: 20140313060855) do
     t.integer  "logo_file_size"
   end
 
+  create_table "fabric_tags", force: true do |t|
+    t.integer  "fabric_id"
+    t.integer  "tag_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "fabrics", force: true do |t|
     t.string   "code"
     t.integer  "width"
@@ -76,11 +83,6 @@ ActiveRecord::Schema.define(version: 20140313060855) do
     t.integer  "crop_h",                                          default: 400
   end
 
-  create_table "fabrics_tags", id: false, force: true do |t|
-    t.integer "tag_id"
-    t.integer "fabric_id"
-  end
-
   create_table "reed_picks", force: true do |t|
     t.integer  "reed"
     t.integer  "pick"
@@ -98,9 +100,9 @@ ActiveRecord::Schema.define(version: 20140313060855) do
 
   create_table "tags", force: true do |t|
     t.string   "name"
-    t.string   "tagtype"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "type"
   end
 
   create_table "users", force: true do |t|
